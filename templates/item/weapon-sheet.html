@@ -1,0 +1,88 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+        <div class="header-fields">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Weapon Name"/>
+            </h1>
+        </div>
+    </header>
+
+    <div class="sheet-body">
+        <!-- Basic Information Section -->
+        <div class="form-group">
+            <h3>Basic Information</h3>
+            <div class="form-row">
+                <div class="form-field checkbox-field">
+                    <label>
+                        <input type="checkbox" name="system.isRanged" {{checked system.isRanged}}/>
+                        Ranged Weapon
+                    </label>
+                </div>
+                <div class="form-field">
+                    <label>Group</label>
+                    <input type="text" name="system.group" value="{{system.group}}" placeholder=""/>
+                </div>
+                <div class="form-field">
+                    <label>Availability</label>
+                    <input type="text" name="system.availability" value="{{system.availability}}" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Cost (gc)</label>
+                    <input type="number" name="system.cost" value="{{system.cost}}" min="0" data-dtype="Number"/>
+                </div>
+                <div class="form-field">
+                    <label>Encumbrance</label>
+                    <input type="number" name="system.encumbrance" value="{{system.encumbrance}}" min="0" data-dtype="Number"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Combat Statistics Section -->
+        <div class="form-group">
+            <h3>Combat Statistics</h3>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Damage</label>
+                    <input type="number" name="system.damage" value="{{system.damage}}" min="0" data-dtype="Number"/>
+                </div>
+                <div class="form-field">
+                    <label>Range (yards)</label>
+                    <input type="number" name="system.range" value="{{system.range}}" min="0" data-dtype="Number" placeholder="0 for melee"/>
+                </div>
+                <div class="form-field">
+                    <label>Reload</label>
+                    <input type="text" name="system.reload" value="{{system.reload}}" placeholder=""/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weapon Properties Section -->
+        <div class="form-group">
+            <h3>Weapon Properties</h3>
+            <div class="form-row">
+                <div class="form-field checkbox-field">
+                    <label>
+                        <input type="checkbox" name="system.hasImpact" {{checked system.hasImpact}}/>
+                        Impact
+                    </label>
+                </div>
+                <div class="form-field checkbox-field">
+                    <label>
+                        <input type="checkbox" name="system.hasDefensive" {{checked system.hasDefensive}}/>
+                        Defensive
+                    </label>
+                </div>
+            </div>
+            <div class="form-field">
+                <label>Qualities</label>
+                <textarea name="system.qualities" rows="1" placeholder="">{{system.qualities}}</textarea>
+            </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="form-group">
+            <h3>Description & Notes</h3>
+            <textarea name="system.description" rows="2" placeholder="Add notes and description about this weapon...">{{system.description}}</textarea>

@@ -1,0 +1,77 @@
+{
+    "id":"fvtt-wfrp2e",
+    "title":"Warhammer Fantasy Roleplay 2nd Edition",
+    "description":"Unofficial Foundry VTT system for WFRP2E",
+    "version":"1.0.0",
+    "compatibility":
+    {
+        "minimum":"13",
+        "verified":"13"
+    },
+
+    "authors":
+    [
+        {
+            "name":"Tarinor"
+        },
+        {
+            "name":"justanothermage"
+        }
+    ],
+
+    "media": [
+    {
+      "type": "setup",
+      "url": "systems/fvtt-wfrp2e/assets/Warhammer_fantasy_roleplay_cover.jpg",
+      "thumbnail": "systems/fvtt-wfrp2e/assets/Warhammer_fantasy_roleplay_cover.jpg"
+    }
+    ],
+
+    "esmodules": ["modules/wfrp2e.mjs"],
+    "styles": ["styles/main.css"],
+
+    "languages":
+    [   
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json"
+        }
+    ],
+
+    "documentTypes": {
+        "Actor": {
+            "character": {
+                "htmlFields": ["biography"],
+                "filePathFields": {
+                    "crest": ["IMAGE"]
+                }
+            }
+        },
+        "Item": {
+            "career": {},
+            "weapon": {},
+            "armour": {},
+            "spell": {},
+            "talent": {},
+            "mutation": {},
+            "insanity": {},
+            "equipment": {}
+        }
+    },
+
+    "packs": [],
+    "packFolders": [],
+    "socket": false,
+    "manifest": "Replace this with a link to the /latest release system.json",
+    "download": "link to a .zip file of the current version",
+    "background": "systems/fvtt-wfrp2e/assets/Warhammer_fantasy_roleplay_cover.jpg",
+    
+    "grid":
+    {
+        "gridDistance": 2,
+        "gridUnits": "yards"
+    },
+
+    "primaryTokenAttribute": "system.secondary.wounds"
+}

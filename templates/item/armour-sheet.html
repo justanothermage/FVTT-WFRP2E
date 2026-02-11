@@ -1,0 +1,92 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+        <div class="header-fields">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Armour Name"/>
+            </h1>
+        </div>
+    </header>
+
+    <div class="sheet-body">
+        <!-- Basic Information Section -->
+        <div class="form-group">
+            <h3>Basic Information</h3>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Armour Type</label>
+                    <input type="text" name="system.armourType" value="{{system.armourType}}" placeholder="e.g. Leather, Chainmail, Plate"/>
+                </div>
+                <div class="form-field">
+                    <label>Availability</label>
+                    <input type="text" name="system.availability" value="{{system.availability}}" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Cost (gc)</label>
+                    <input type="number" name="system.cost" value="{{system.cost}}" min="0" data-dtype="Number"/>
+                </div>
+                <div class="form-field">
+                    <label>Encumbrance</label>
+                    <input type="number" name="system.encumbrance" value="{{system.encumbrance}}" min="0" data-dtype="Number"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Armour Locations Section -->
+        <div class="form-group">
+            <h3>Armour Locations</h3>
+            <div class="armour-locations">
+                <div class="location-row">
+                    <div class="location-item">
+                        <label>
+                            <input type="number" name="system.armLeft" value="{{system.armLeft}}" min="0" data-dtype="Number"/>
+                            <span>Left Arm</span>
+                        </label>
+                    </div>
+                    <div class="location-item">
+                        <label>
+                            <input type="number" name="system.head" value="{{system.head}}" min="0" data-dtype="Number"/>
+                            <span>Head</span>
+                        </label>
+                    </div>
+                    <div class="location-item">
+                        <label>
+                            <input type="number" name="system.armRight" value="{{system.armRight}}" min="0" data-dtype="Number"/>
+                            <span>Right Arm</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="location-row">
+                    <div class="location-item">
+                        <label>
+                            <input type="number" name="system.legLeft" value="{{system.legLeft}}" min="0" data-dtype="Number"/>
+                            <span>Left Leg</span>
+                        </label>
+                    </div>
+                    <div class="location-item">
+                        <label>
+                            <input type="number" name="system.body" value="{{system.body}}" min="0" data-dtype="Number"/>
+                            <span>Body</span>
+                        </label>
+                    </div>
+                    <div class="location-item">
+                        <label>
+                            <input type="number" name="system.legRight" value="{{system.legRight}}" min="0" data-dtype="Number"/>
+                            <span>Right Leg</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="form-group">
+            <h3>Description & Notes</h3>
+            <div>
+                <textarea name="system.description" rows="10" placeholder="Add notes and description about this armour...">{{system.description}}</textarea>
+            </div>
+        </div>
+    </div>
+</form>

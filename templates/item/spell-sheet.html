@@ -1,0 +1,22 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+    
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
+        
+        <div class="header-fields">
+            <h1 class="item-title">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Item Name"/>
+            </h1>
+            <p class="item-type">{{item.type}}</p>
+        </div>
+    </header>
+
+    <div class="sheet-body">
+        <h3>Notes</h3>
+        <textarea name="system.description" rows="15" placeholder="Add notes about this item...">{{system.description}}</textarea>
+        
+        <p class="placeholder-message">
+            <strong>Detailed item properties will be added in future updates.</strong>
+        </p>
+    </div>
+</form>

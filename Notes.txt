@@ -1,0 +1,174 @@
+Stuff to model in the database's schema:
+    Actors: 
+        Shared characteristics:
+            Base stats:
+                WS,BS,S,T,AGI,INT,WP,FEL
+                A,W,SB,TB,M,MP,IP,FP
+                Fortune Points, Corruption Points, Current Wounds
+            Skills
+            Race
+            Inventory
+            Equiped items
+            Spells
+            Abilities
+            Talents
+            Advancements
+            GM Notes
+        Subclasses:
+            -Characters:
+                Career list
+                Bio
+                Experience
+                Notes
+
+    Skills:
+        Name
+        Governing attribute/s
+        Basic or not
+        Training Level
+        Modifiers:
+            *Talents
+            *Temporary
+            *Misc
+        Type:
+            +Generic
+            +Trade
+            +AcademicKnowledge
+            +CommonKnowledge
+            +SpeakLanguage
+            +Perform
+            +Magic
+
+    Talents:
+        Name
+        Descprition
+        Skill/Attributes affected
+        Ability
+        Conditions
+        Reminder:
+            +SessionStart
+            +CombatStart
+
+    Spells:
+        Name
+        Misscast Table
+        School
+        Description
+        Casting number
+        Casting time
+        Duration
+        Range
+        Target:
+            -Single
+            -Aoe:
+                -Small circle
+                -Big circle
+                -Cone
+                -Line
+        Ingredient
+        Ingredient Bonus
+        Value Formula
+        Modifiers:
+            Skill/Attribute
+            Value
+
+    Careers:
+        Name
+        Race
+        Description
+        Basic/Advanced
+        Skills
+        Talents
+        Advancements
+        Trappings
+        Entries
+        Exits
+
+    Currencies: (non standard)
+        Name
+        Conversions
+        Description
+
+    Items:
+        Common:
+            Name
+            Descprition
+            Encumberance
+            Value
+            Quality
+            Durability
+            Material
+
+        Consumables:
+            Max uses
+            Uses remaining
+            Effect:
+                Skill/attribute
+                Value
+                Duration
+                Target
+
+        Weapons:
+            Properties
+            Attack Formula
+            Damage Formula
+            Ranged:
+                Short/Long Range
+                Reload Type
+                Reload time 
+                Ammunition:
+                    Item
+                    Ammount per Shot
+
+        Armor:
+            Coverage
+            Armor Value
+            Effect:
+                Attribute/Skill
+                Value
+
+        Magic Items:
+            Charges Remaining
+            Effect:
+                Range
+                Attribute/Skill
+                Value Formula
+                Target
+            Spell
+
+        Containers:
+            Capacity
+            Contents
+            Weight Reduction (%)
+
+        Tools:
+            Governing Skill
+            Contents
+
+        Vehicles:
+            Capacity
+            Inventory
+            Armaments
+            Speed
+            Crew
+            Driving Force
+            Passengers
+            
+        Properties:
+            Surface Area
+            Inventory
+            Features:
+                Name
+                Descrpition
+                Cost per month:
+                    Currency
+                    Items
+                Production per month:
+                    Item
+                    Amount
+                Employees
+            Location
+            Personel
+            Tax amount
+            
+
