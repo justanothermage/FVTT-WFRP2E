@@ -4,9 +4,9 @@ export class WHArmourSheet extends ItemSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["wfrp2e", "sheet", "item", "armour"],
-            width: 500,
+            width: 520,
             height: 600,
-            tabs: []
+            tabs: [{navSelector: ".tabs", contentSelector: ".sheet-body", initial: "details"}]
         });
     }
 
@@ -19,6 +19,11 @@ export class WHArmourSheet extends ItemSheet {
     async getData(options) {
         const context = await super.getData(options);
         context.system = this.item.system;
+
+        context.enrichedDescription = await TextEditor.enrichHTML(this.item.system.description, {
+            async: true,
+            secrets: this.item.isOwner
+        });
         return context;
     }
 

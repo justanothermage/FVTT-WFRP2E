@@ -7,7 +7,7 @@ export class WHCharacterSheet extends ActorSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["wfrp2e", "sheet", "actor", "character"],
-            width: 700,
+            width: 1000,
             height: 800,
             tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "main"}]
         });
@@ -72,25 +72,31 @@ export class WHCharacterSheet extends ActorSheet {
         
         // Get armour and add equipment status from flags 
         context.armour = this.actor.items.filter(i => i.type === "armour").map(armour => {
+            const isEquipped = armour.getFlag('fvtt-wfrp2e', 'isEquipped') || false;
+            // console.log(`Armor ${armour.name}: isEquipped flag = ${isEquipped}`); // Debugging log
+
             return {
                 id: armour.id,
+                _id: armour._id,
                 name: armour.name,
                 img: armour.img,
                 system: armour.system,
-                isEquipped: armour.getFlag("fvtt-wfrp2e", "equipped") || false
+                isEquipped: isEquipped
             };
         });
+
+        // console.log("Armour context:", context.armour);// Debugging log 
 
         // Calculate total armour for each location
         context.totalArmour = {
             head: this.actor.getTotalArmourForLocation('head'),
             body: this.actor.getTotalArmourForLocation('body'),
-            leftArm: this.actor.getTotalArmourForLocation('leftArm'),
-            rightArm: this.actor.getTotalArmourForLocation('rightArm'),
-            leftLeg: this.actor.getTotalArmourForLocation('leftLeg'),
-            rightLeg: this.actor.getTotalArmourForLocation('rightLeg')
+            legLeft: this.actor.getTotalArmourForLocation('legLeft'),
+            legRight: this.actor.getTotalArmourForLocation('legRight'),
+            armLeft: this.actor.getTotalArmourForLocation('armLeft'),
+            armRight: this.actor.getTotalArmourForLocation('armRight')
         };
-        console.log("Total armour:", context.totalArmour);
+        // console.log("Total armour:", context.totalArmour);
 
         return context;
     }
@@ -173,7 +179,7 @@ export class WHCharacterSheet extends ActorSheet {
             i => i.type === "career" && i.system.careerEntered > 0
         );
 
-        console.log("Entered careers:", enteredCareers.map(c => c.name));
+        // console.log("Entered careers:", enteredCareers.map(c => c.name));
         // If no careers have been entered, set all career advances to 0
         if (enteredCareers.length === 0) {
             if (actorData.characteristics) {
@@ -202,7 +208,7 @@ export class WHCharacterSheet extends ActorSheet {
                 actorData.characteristics.int.career = Math.max(...enteredCareers.map(c => c.system.careerInt || 0));
                 actorData.characteristics.wp.career = Math.max(...enteredCareers.map(c => c.system.careerWP || 0));
                 actorData.characteristics.fel.career = Math.max(...enteredCareers.map(c => c.system.careerFel || 0));
-                console.log("Characteristic career advances calculates:", {
+                /* console.log("Characteristic career advances calculates:", {
                     ws: actorData.characteristics.ws.career,
                     bs: actorData.characteristics.bs.career,
                     s: actorData.characteristics.s.career,
@@ -211,7 +217,7 @@ export class WHCharacterSheet extends ActorSheet {
                     int: actorData.characteristics.int.career,
                     wp: actorData.characteristics.wp.career,
                     fel: actorData.characteristics.fel.career
-                })
+                })*/ 
             }
         }
 
@@ -225,7 +231,7 @@ export class WHCharacterSheet extends ActorSheet {
             actorData.characteristics.int.career = Math.max(...enteredCareers.map(c => c.system.careerInt || 0));
             actorData.characteristics.wp.career = Math.max(...enteredCareers.map(c => c.system.careerWP || 0));
             actorData.characteristics.fel.career = Math.max(...enteredCareers.map(c => c.system.careerFel || 0));
-            console.log("Characteristic career advances calculated:", {
+            /*console.log("Characteristic career advances calculated:", {
                 ws: actorData.characteristics.ws.career,
                 bs: actorData.characteristics.bs.career,
                 s: actorData.characteristics.s.career,
@@ -234,7 +240,7 @@ export class WHCharacterSheet extends ActorSheet {
                 int: actorData.characteristics.int.career,
                 wp: actorData.characteristics.wp.career,
                 fel: actorData.characteristics.fel.career
-            })
+            })*/
         }
 
         // Find max values for secondary characteristics
@@ -243,12 +249,12 @@ export class WHCharacterSheet extends ActorSheet {
             actorData.secondary.wounds.career = Math.max(...enteredCareers.map(c => c.system.careerWounds || 0));
             actorData.secondary.movement.career = Math.max(...enteredCareers.map(c => c.system.careerMovement || 0));
             actorData.secondary.magic.career = Math.max(...enteredCareers.map(c => c.system.careerMagic || 0));
-            console.log("Secondary characteristic career advances calculated:", {
+            /*console.log("Secondary characteristic career advances calculated:", {
                 attacks: actorData.secondary.attacks.career,
                 wounds: actorData.secondary.wounds.career,
                 movement: actorData.secondary.movement.career,
                 magic: actorData.secondary.magic.career
-            })
+            })*/
         }
     }
 
@@ -314,13 +320,13 @@ export class WHCharacterSheet extends ActorSheet {
     async _onAddSkill(event) {
         event.preventDefault();
         
-        // Generate console logs for debugging
+        /* Generate console logs for debugging
         console.log("Button clicked:", event.currentTarget);
         console.log("Dataset:", event.currentTarget.dataset);
-        console.log("Category from dataset:", event.currentTarget.dataset.category);
+        console.log("Category from dataset:", event.currentTarget.dataset.category);*/
 
         const category = event.currentTarget.dataset.category || "basic";
-        console.log("Final category:", category); // More console logging
+        // console.log("Final category:", category); // More console logging
         const skills = this.actor.system.skills;
         const newSkill = {
             name: "",
@@ -331,7 +337,7 @@ export class WHCharacterSheet extends ActorSheet {
             modifier: 0
         };
         
-        console.log("New skill being created:", newSkill); // Even MORE console logging
+        // console.log("New skill being created:", newSkill); // Even MORE console logging
 
         await this.actor.update({
             "system.skills": [...skills, newSkill]
@@ -422,10 +428,10 @@ export class WHCharacterSheet extends ActorSheet {
      * @private
      */
     async _onItemEdit(event) {
-        // Debugging logs
+        /* Debugging logs
         console.log("!!! EDIT HANDLER CALLED !!!");
         console.log("Event:", event);
-        console.log("Current target:", event.currentTarget);
+        console.log("Current target:", event.currentTarget);*/
 
         event.preventDefault();
         const itemId = event.currentTarget.dataset.itemId;
@@ -441,9 +447,9 @@ export class WHCharacterSheet extends ActorSheet {
      * @private
      */
     async _onItemDelete(event) {
-        // Debugging logs
+        /* Debugging logs
         console.log("!!! DELETE HANDLER CALLED !!!");
-        console.log("Event:", event);
+        console.log("Event:", event);*/
 
         event.preventDefault();
         const itemId = event.currentTarget.dataset.itemId;
@@ -539,12 +545,23 @@ export class WHCharacterSheet extends ActorSheet {
         const checkbox = event.currentTarget;
         const itemId = checkbox.dataset.itemId;
         const isEquipped = checkbox.checked;
+
+        // console.log("=== ARMOUR TOGGLE ==="); // Debugging log
+
         // Get the armour item from the actor
         const armour = this.actor.items.get(itemId);
+
         if (armour) {
-            // Update equipped flag
-            await armour.setFlag("fvtt-wfrp2e", "equipped", isEquipped);
-            console.log(`Updated armour ${armour.name} equipped status to ${isEquipped}`);
+            // Use update instead of setFlag
+            await armour.update({
+                "flags.fvtt-wfrp2e.isEquipped": isEquipped
+            })
+
+            // console.log("Flag updated via update()");
+
+            // Verify
+            const flagValue = armour.getFlag('fvtt-wfrp2e', 'isEquipped');
+            // console.log("Flag value:", flagValue);
         }
     }
     

@@ -138,10 +138,12 @@ export class WHCharacter extends Actor {
     prepareDerivedData() {
         super.prepareDerivedData();
         const systemData = this.system;
-        // Debugging logs
-        // console.log("prepareDerivedData running for:", this.name);
-        // console.log("systemData.secondary exists?", !!systemData.secondary);
-        // console.log("systemData.secondary:", systemData.secondary);
+
+        /* Debugging logs
+        console.log("prepareDerivedData running for:", this.name);
+        console.log("systemData.secondary exists?", !!systemData.secondary);
+        console.log("systemData.secondary:", systemData.secondary);*/
+        
         // Calculate current characteristic values (New Method)
         if (systemData.characteristics) {
             for (let [key, char] of Object.entries(systemData.characteristics)) {
@@ -171,19 +173,19 @@ export class WHCharacter extends Actor {
             }
             if (systemData.characteristics.s && systemData.secondary.strengthBonus) {
                 systemData.secondary.strengthBonus.value = Math.floor(systemData.characteristics.s.current / 10) + (systemData.secondary.strengthBonus.misc || 0);
-                console.log(`strengthBonus.value = ${systemData.secondary.strengthBonus.value}`);
+                //console.log(`strengthBonus.value = ${systemData.secondary.strengthBonus.value}`);
             }
             if (systemData.characteristics.t && systemData.secondary.toughnessBonus) {
                 systemData.secondary.toughnessBonus.value = Math.floor(systemData.characteristics.t.current / 10) + (systemData.secondary.toughnessBonus.misc || 0);
-                console.log(`toughnessBonus.value = ${systemData.secondary.toughnessBonus.value}`);
+                //console.log(`toughnessBonus.value = ${systemData.secondary.toughnessBonus.value}`);
             }
             if (systemData.secondary.insanityPoints) {
                 systemData.secondary.insanityPoints.current = (systemData.secondary.insanityPoints.initial || 0) + (systemData.secondary.insanityPoints.misc || 0);
-                console.log(`insanityPoints.current = ${systemData.secondary.insanityPoints.current}`);
+                //console.log(`insanityPoints.current = ${systemData.secondary.insanityPoints.current}`);
             }
             if (systemData.secondary.fatePoints) {
                 systemData.secondary.fatePoints.current = (systemData.secondary.fatePoints.initial || 0) + (systemData.secondary.fatePoints.misc || 0);
-                console.log(`fatePoints.current = ${systemData.secondary.fatePoints.current}`);
+                //console.log(`fatePoints.current = ${systemData.secondary.fatePoints.current}`);
             }
         }        
         // Calculate available experience
@@ -223,23 +225,35 @@ export class WHCharacter extends Actor {
     * @param {string} location - Location key (head, body, armLeft, armRight, legLeft, legRight)
     */
     getTotalArmourForLocation(location) {
+        console.log(`=== Calculating armor for ${location} ===`); // Debugging log
+
         // Get Toughness Bonus
         const toughnessBonus = this.system.secondary?.toughnessBonus?.value || 0;
-    
+        console.log("Toughness Bonus:", toughnessBonus);
+
         // Get equipped armor that protects this location
-        const equippedArmour = this.items.filter(item => 
-            item.type === "armour" && 
-            item.getFlag('fvtt-wfrp2e', 'isEquipped') &&
-            item.system[location]
-        );
-    
+        const equippedArmour = this.items.filter(item => {
+            const isArmour = item.type === "armour";
+            const isEquipped = item.getFlag('fvtt-wfrp2e', 'isEquipped');
+            //const protectsLocation = item.system[location];
+            console.log(`${item.name}: type=${isArmour}, equipped=${isEquipped}, ${location} AP=${item.system?.[location]}`);
+            return isArmour && isEquipped;
+        });
+
+        console.log(`Found ${equippedArmour.length} equipped armor pieces`); // Debugging log
+
         // Sum up armor points from all equipped armor
         let armourPoints = 0;
         for (let armor of equippedArmour) {
-            armourPoints += armor.system.armourPoints || 0;
+            const locationAP = armor.system[location] || 0;
+            console.log(`  ${armor.name}: ${locationAP} AP for ${location}`);
+            armourPoints += locationAP;
         }
     
         // Total = TB + Armor Points
-        return toughnessBonus + armourPoints;
+        const total = toughnessBonus + armourPoints;
+        console.log(`Total for ${location}: ${toughnessBonus} (TB) + ${armourPoints} (armor) = ${total}`);
+
+        return total;
     }
 }

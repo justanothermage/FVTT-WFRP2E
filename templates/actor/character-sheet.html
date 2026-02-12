@@ -570,19 +570,19 @@
                 </div>
                 <div class="armour-location">
                     <label>Left Arm</label>
-                    <div class="armour-value">{{totalArmour.leftArm}}</div>
+                    <div class="armour-value">{{totalArmour.armLeft}}</div>
                 </div>
                 <div class="armour-location">
                     <label>Right Arm</label>
-                    <div class="armour-value">{{totalArmour.rightArm}}</div>
+                    <div class="armour-value">{{totalArmour.armRight}}</div>
                 </div>
                 <div class="armour-location">
                     <label>Left Leg</label>
-                    <div class="armour-value">{{totalArmour.leftLeg}}</div>
+                    <div class="armour-value">{{totalArmour.legLeft}}</div>
                 </div>
                 <div class="armour-location">
                     <label>Right Leg</label>
-                    <div class="armour-value">{{totalArmour.rightLeg}}</div>
+                    <div class="armour-value">{{totalArmour.legRight}}</div>
                 </div>
             </div>
 
@@ -674,19 +674,20 @@
                     <div class="item-controls"></div>
                 </li>
 
-                {{#each armours as |armour|}}
-                <li class="item {{#if armor.isEquipped}}equipped{{/if}}" data-item-id="{{armor.id}}">
+                {{#each armour as |armour|}}
+                <li class="item {{#if armour.isEquipped}}equipped{{/if}}" data-item-id="{{armour.id}}">
                     <div class="item-equipped">
-                        <input type="checkbox" class="armour-equipped-toggle" data-item-id="{{armor.id}}" {{checked armour.system.isEquipped}} title="Toggle Equipped"/>
+                        <input type="checkbox" class="armour-equipped-toggle" data-item-id="{{armour.id}}" {{checked armour.isEquipped}} title="Toggle Equipped"/>
                     </div>
                     <div class="item-name">{{armour.name}}</div>
-                    <div class="item-ap">{{armor.system.armourPoints}}</div>
+                    <div class="item-ap">{{armour.system.armourPoints}}</div>
                     <div class="item-locations-compact">
-                        {{#if armor.system.head}}<span class="location-badge">H</span>{{/if}}
-                        {{#if armor.system.armLeft}}<span class="location-badge">LA</span>{{/if}}
-                        {{#if armor.system.armRight}}<span class="location-badge">RA</span>{{/if}}
-                        {{#if armor.system.legLeft}}<span class="location-badge">LL</span>{{/if}}
-                        {{#if armor.system.legRight}}<span class="location-badge">RL</span>{{/if}}
+                        {{#if armour.system.head}}<span class="location-badge">Head</span>{{/if}}
+                        {{#if armour.system.armLeft}}<span class="location-badge">Left Arm</span>{{/if}}
+                        {{#if armour.system.armRight}}<span class="location-badge">Right Arm</span>{{/if}}
+                        {{#if armour.system.legLeft}}<span class="location-badge">Left Leg</span>{{/if}}
+                        {{#if armour.system.legRight}}<span class="location-badge">Right Leg</span>{{/if}}
+                        {{#if armour.system.body}}<span class="location-badge">Body</span>{{/if}}
                     </div>
                     <div class="item-controls">
                         <a class="item-control item-edit" data-item-id="{{armour.id}}" title="Edit Armour">
@@ -779,7 +780,7 @@
                         <div class="item-controls"></div>
                     </li>
 
-                    {{#each armours as |armour|}}
+                    {{#each armour as |armour|}}
                     <li class="item {{#if armour.isEquipped}}equipped{{/if}}" data-item-id="{{armour.id}}">
                         <div class="item-equipped">
                             <input type="checkbox" class="armour-equipped-toggle" data-item-id="{{armour.id}}" {{checked armour.isEquipped}} title="Toggle Equipped"/>
