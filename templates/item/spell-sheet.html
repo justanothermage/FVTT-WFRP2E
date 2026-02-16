@@ -1,22 +1,125 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
-    
     <header class="sheet-header">
-        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
-        
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
         <div class="header-fields">
-            <h1 class="item-title">
-                <input name="name" type="text" value="{{item.name}}" placeholder="Item Name"/>
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Spell Name"/>
             </h1>
-            <p class="item-type">{{item.type}}</p>
         </div>
     </header>
 
-    <div class="sheet-body">
-        <h3>Notes</h3>
-        <textarea name="system.description" rows="15" placeholder="Add notes about this item...">{{system.description}}</textarea>
-        
-        <p class="placeholder-message">
-            <strong>Detailed item properties will be added in future updates.</strong>
-        </p>
-    </div>
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="details">Details</a>
+        <a class="item" data-tab="description">Description</a>
+    </nav>
+
+    <section class="sheet-body">
+        <!-- Details Tab -->
+        <div class="tab" data-group="primary" data-tab="details">
+            <div class="form-group-vertical">
+                <div class="form-field-line">
+                    <label>Spell Level</label>
+                    <select name="system.level">
+                        <option value="Petty" {{#if (eq system.level "Petty")}}selected{{/if}}>Petty</option>
+                        <option value="Lesser" {{#if (eq system.level "Lesser")}}selected{{/if}}>Lesser</option>
+                        <option value="Lore" {{#if (eq system.level "Lore")}}selected{{/if}}>Lore</option>
+                </div>
+                
+                <div class="form-field-line">
+                    <label>Casting Number</label>
+                    <input type="number" name="system.castNumber" value="{{system.castNumber}}" min="1" data-dtype="Number"/>
+                </div>
+
+                <div class="form-field-line">
+                    <label>Casting Time</label>
+                    <input type="text" name="system.castTime" value="{{system.castTime}}" placeholder="e.g., Half Action, Full Action"/>
+                </div>
+
+                <div class="form-field-line">
+                    <label>Duration</label>
+                    <input type="text" name="system.duration" value="{{system.duration}}" placeholder="e.g., Instant, 1 Round, 1 Minute"/>
+                </div>
+
+                <div class="form-field-line">
+                    <label>Range</label>
+                    <input type="text" name="system.range" value="{{system.range}}" placeholder="e.g., Touch, 12 yards, Line of Sight"/>
+                </div>
+
+                <div class="form-field-line">
+                    <label>Target</label>
+                    <input type="text" name="system.target" value="{{system.target}}" placeholder="e.g., You, 1 Target, Area"/>
+                </div>
+
+                <div class="section-divider">
+                    <h3>Combat Effects</h3>
+                </div>
+
+                <div class="form-field-line">
+                    <label>Attacks</label>
+                    <select name="system.attacks">
+                        <option value="None" {{#if (eq system.attacks "None")}}selected{{/if}}>None</option>
+                        <option value="1" {{#if (eq system.attacks "1")}}selected{{/if}}>1</option>
+                        <option value="2" {{#if (eq system.attacks "2")}}selected{{/if}}>2</option>
+                        <option value="3" {{#if (eq system.attacks "3")}}selected{{/if}}>3</option>
+                        <option value="4" {{#if (eq system.attacks "4")}}selected{{/if}}>4</option>
+                        <option value="5" {{#if (eq system.attacks "5")}}selected{{/if}}>5</option>
+                        <option value="1d10" {{#if (eq system.attacks "1d10")}}selected{{/if}}>1d10</option>
+                        <option value="Magic" {{#if (eq system.attacks "Magic")}}selected{{/if}}>Magic</option>
+                    </select>
+                </div>
+
+                <div class="form-field-line">
+                    <label>Damage</label>
+                    <select name="system.damage">
+                        <option value="None" {{#if (eq system.damage "None")}}selected{{/if}}>None</option>
+                        <option value="0" {{#if (eq system.damage "0")}}selected{{/if}}>0</option>
+                        <option value="1" {{#if (eq system.damage "1")}}selected{{/if}}>1</option>
+                        <option value="2" {{#if (eq system.damage "2")}}selected{{/if}}>2</option>
+                        <option value="3" {{#if (eq system.damage "3")}}selected{{/if}}>3</option>
+                        <option value="4" {{#if (eq system.damage "4")}}selected{{/if}}>4</option>
+                        <option value="5" {{#if (eq system.damage "5")}}selected{{/if}}>5</option>
+                        <option value="6" {{#if (eq system.damage "6")}}selected{{/if}}>6</option>
+                        <option value="7" {{#if (eq system.damage "7")}}selected{{/if}}>7</option>
+                        <option value="8" {{#if (eq system.damage "8")}}selected{{/if}}>8</option>
+                        <option value="9" {{#if (eq system.damage "9")}}selected{{/if}}>9</option>
+                        <option value="10" {{#if (eq system.damage "10")}}selected{{/if}}>10</option>
+                        <option value="1d10" {{#if (eq system.damage "1d10")}}selected{{/if}}>1d10</option>
+                        <option value="Magic" {{#if (eq system.damage "Magic")}}selected{{/if}}>Magic</option>
+                    </select>
+                </div>
+
+                <div class="form-field-line">
+                    <label>Healing</label>
+                    <select name="system.healing">
+                        <option value="None" {{#if (eq system.healing "None")}}selected{{/if}}>None</option>
+                        <option value="1" {{#if (eq system.healing "1")}}selected{{/if}}>1</option>
+                        <option value="1d10" {{#if (eq system.healing "1d10")}}selected{{/if}}>1d10</option>
+                        <option value="Magic" {{#if (eq system.healing "Magic")}}selected{{/if}}>Magic</option>
+                        <option value="1d10+Magic" {{#if (eq system.healing "1d10+Magic")}}selected{{/if}}>1d10+Magic</option>
+                    </select>
+                </div>
+
+                <div class="section-divider">
+                    <h3>Ingredient</h3>
+                </div>
+
+                <div class="form-field-line">
+                    <label>Ingredient</label>
+                    <input type="text" name="system.ingredient" value="{{system.ingredient}}" placeholder="e.g., A pinch of salt"/>
+                </div>
+
+                <div class="form-field-line">
+                    <label>Ingredient Bonus</label>
+                    <input type="number" name="system.ingredientBonus" value="{{system.ingredientBonus}}" data-dtype="Number"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description Tab -->
+        <div class="tab" data-group="primary" data-tab="description">
+            <div class="editor-container">
+                {{editor enrichedDescription target="system.description" button=true owner=owner editable=editable}}
+            </div>
+        </div>
+    </section>
 </form>

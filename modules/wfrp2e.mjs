@@ -19,10 +19,6 @@ import {WHInsanitySheet} from "../sheets/Insanity.mjs";
 import {WHEquipmentSheet} from "../sheets/Equipment.mjs";
 import {DEFAULT_SKILLS} from "../modules/default-skills.mjs";
 
-// Debugging logs for missing default skills
-//console.log("DEFAULT_SKILLS defined:", DEFAULT_SKILLS);
-//console.log("wfrp2e.mjs - Basic skills count:", DEFAULT_SKILLS?.basic?.length);
-
 Hooks.once("init", function () {
     console.log("wfrp2e | Initializing system");
     
@@ -47,6 +43,11 @@ Hooks.once("init", function () {
         label: "wfrp2e Character Sheet"
     });
     
+    // Register Handlebars helpers for eqality checks
+    Handlebars.registerHelper('eq', function(a, b) {
+        return a === b;
+    });
+
     // Register item sheets
     Items.registerSheet('fvtt-wfrp2e', WHCareerSheet, {
         types: ["career"],
@@ -95,25 +96,10 @@ Hooks.once("init", function () {
 });
 
 // Hook that runs when a new actor is created
-Hooks.on("preCreateActor", (actor, data, options, userId) => {
-    console.log("WFRP2E | preCreateActor fired for:", actor.type);
-    
+Hooks.on("preCreateActor", (actor, data, options, userId) => {    
     // Adds default skills for character type actors
     if (actor.type !== "character") return;
-    
-    // Debugging logs for missing default skills
-    //console.log("WFRP2E | Current skills:", actor.system.skills);
-    //console.log("WFRP2E | DEFAULT_SKILLS:", DEFAULT_SKILLS);
-    //console.log("WFRP2E | DEFAULT_SKILLS.basic:", DEFAULT_SKILLS.basic.length);
-
-    // Check for skills that already exist, temporarily disabled for debugging missing default skills
-    //if (actor.system.skills && actor.system.skills.length > 0) {
-    //    console.log("WFRP2E | Skills already exist, skipping defaults");
-    //    return;
-    //}
-    
-    console.log("WFRP2E | Adding default skills");
-    
+        
     // Build the skills array from defaults
     const skills = [];
     
@@ -167,13 +153,6 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
     
     console.log("WFRP2E | Adding", skills.length, "default skills");
     
-    // Debugging logs for missing default skills
-    console.log("WFRP2E | Total skills to add:", skills.length);
-    console.log("WFRP2E | Skills array:", skills);
-
     // Update the actor with default skills
     actor.updateSource({"system.skills": skills});
-
-    // Debugging logs for missing default skills
-    console.log("WFRP2E | After updateSource, actor.system.skills:", actor.system.skills);
 });

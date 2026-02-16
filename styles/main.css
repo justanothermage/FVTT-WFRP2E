@@ -16,15 +16,120 @@
 .wfrp2e .sheet-header {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 15px;
     padding: 10px;
     border-bottom: 2px solid #000;
-    flex-shrink: 0;
+    flex: 0 0 120px;
+    max-height: 120px;
+    overflow: visible;
 }
 
 .wfrp2e .profile-img {
+    flex: 0 0 100px;
+    width: 100px;
+    height: 100px;
     border: 2px solid #000;
     cursor: pointer;
+    object-fit: cover;
+}
+
+.wfrp2e .header-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Header Row 1 */
+.wfrp2e .header-row-1 {
+    display: flex;
+    gap: 10px;
+}
+
+.wfrp2e .header-row-1 .name-field {
+    flex: 0 0 250px;
+}
+
+.wfrp2e .header-row-1 .header-field:nth-child(2) {
+    flex: 0 0 200px;
+}
+
+.wfrp2e .header-row-1 .previous-careers-field {
+    flex: 1; /* Takes remaining space */
+}
+
+/* Header Row 2 */
+.wfrp2e .header-row-2 {
+    display: flex;
+    gap: 10px;
+}
+
+.wfrp2e .header-row-2 .header-field:nth-child(1),
+.wfrp2e .header-row-2 .header-field:nth-child(2) {
+    flex: 0 0 150px;
+}
+
+.wfrp2e .header-row-2 .concept-field {
+    flex: 1; /* Takes remaining space */
+}
+
+.wfrp2e .header-row-2 .xp-field {
+    flex: 0 0 120px;
+}
+
+/* Header Field Styling */
+.wfrp2e .header-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.wfrp2e .header-field label {
+    font-weight: bold;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    color: #555;
+}
+
+.wfrp2e .header-field input[type="text"],
+.wfrp2e .header-field input[type="number"] {
+    padding: 5px;
+    border: 1px solid #999;
+    font-size: 13px;
+    background: white;
+}
+
+.wfrp2e .header-field input[name="name"] {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.wfrp2e .current-career-display {
+    padding: 5px;
+    font-weight: bold;
+    color: #782e22;
+    background: #fff9f5;
+    border: 1px solid #782e22;
+    display: block;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* XP Field Special Layout */
+.wfrp2e .xp-inputs {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.wfrp2e .xp-inputs input {
+    width: 45px;
+    text-align: center;
+}
+
+.wfrp2e .xp-inputs span {
+    font-weight: bold;
 }
 
 .wfrp2e .header-fields {
@@ -297,27 +402,6 @@
     margin-top: 10px;
     padding: 5px 10px;
     cursor: pointer;
-}
-
-/* Armour Grid */
-.wfrp2e .armour-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.wfrp2e .armour-location {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border: 1px solid #999;
-    background: #f9f9f9;
-}
-
-.wfrp2e .armour-location label {
-    font-weight: bold;
-    margin-bottom: 5px;
 }
 
 /* Previous Careers */
@@ -1267,6 +1351,50 @@
     overflow-y: auto;
 }
 
+/* Biography Tab */
+.tab.biography h3 {
+    margin: 20px 0 10px 0;
+    font-size: 1.2em;
+    color: #782e22;
+    border-bottom: 2px solid #782e22;
+    padding-bottom: 5px;
+}
+
+.tab.biography h3:first-child {
+    margin-top: 0;
+}
+
+.tab.biography .astrology-section,
+.tab.biography .appearance-section {
+    margin-bottom: 25px;
+}
+
+.tab.biography .astrology-field,
+.tab.biography .appearance-field {
+    margin-bottom: 10px;
+}
+
+.tab.biography .appearance-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.tab.biography label {
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.tab.biography input[type="text"],
+.tab.biography input[type="number"] {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #999;
+}
+
 /* Armour Combat List */
 .armour-list .item-ap {
     font-size: 1.2em;
@@ -1335,4 +1463,298 @@
 
 .location-input input {
     width: 100%;
+}
+
+/* Spell Casting Dialog */
+.spell-casting-form .form-group {
+    margin-bottom: 10px;
+}
+
+.spell-casting-form .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.spell-casting-form .checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.spell-casting-form input[readonly] {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+/* Spell Cast Chat Message */
+.wfrp-roll.spell-cast {
+    border: 2px solid #9c27b0;
+    border-radius: 5px;
+    padding: 10px;
+    background: #f3e5f5;
+}
+
+.spell-cast .spell-header {
+    text-align: center;
+    border-bottom: 2px solid #9c27b0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.spell-cast .actor-name {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.spell-cast .spell-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #9c27b0;
+    margin: 5px 0;
+}
+
+.spell-cast .spell-details {
+    font-size: 0.85em;
+    color: #555;
+    line-height: 1.4;
+}
+
+.spell-cast .casting-result {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+}
+
+.spell-cast .casting-result > div {
+    text-align: center;
+}
+
+.spell-cast .casting-result label {
+    font-size: 0.8em;
+    color: #666;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.spell-cast .casting-result .value {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+.spell-cast .casting-result .value.success {
+    color: #4caf50;
+}
+
+.spell-cast .casting-result .value.failure {
+    color: #f44336;
+}
+
+.spell-cast .dice-breakdown {
+    margin: 10px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+}
+
+.spell-cast .dice-group {
+    margin: 5px 0;
+}
+
+.spell-cast .die-result {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background: #9c27b0;
+    color: white;
+    border-radius: 3px;
+    margin: 0 2px;
+    font-weight: bold;
+}
+
+.spell-cast .die-result.wind {
+    background: #2196f3;
+}
+
+.spell-cast .die-result.miscast {
+    background: #ff9800;
+}
+
+.spell-cast .modifiers-breakdown {
+    margin: 10px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.spell-cast .outcome {
+    margin: 15px 0;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    border-radius: 5px;
+}
+
+.spell-cast .outcome.success {
+    background: #4caf50;
+    color: white;
+}
+
+.spell-cast .outcome.failure {
+    background: #f44336;
+    color: white;
+}
+
+.spell-cast .outcome.catastrophic-failure {
+    background: #000;
+    color: #ff0000;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.spell-cast .miscast-warning {
+    background: #ff9800;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.spell-cast .miscast-warning i {
+    margin-right: 5px;
+}
+
+.spell-cast .spell-effects {
+    margin: 10px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+}
+
+.spell-cast .spell-effects div {
+    margin: 3px 0;
+}
+
+.spell-cast .spell-description {
+    margin-top: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+/* Spell Sheet Dropdown */
+.form-field-line select {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px solid #999;
+    background: white;
+    font-size: 13px;
+}
+
+.form-field-line select:focus {
+    outline: 2px solid #9c27b0;
+    border-color: #9c27b0;
+}
+
+/* Spell Damage Section */
+.spell-cast .damage-section {
+    margin: 15px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+    border-left: 4px solid #f44336;
+}
+
+.spell-cast .damage-section h4 {
+    margin: 0 0 10px 0;
+    color: #f44336;
+}
+
+.spell-cast .damage-attack {
+    margin: 10px 0;
+    padding: 10px;
+    background: #fff3f3;
+    border-radius: 3px;
+}
+
+.spell-cast .hit-location-info {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.spell-cast .damage-total {
+    font-size: 1.1em;
+    margin: 5px 0;
+}
+
+.spell-cast .damage-breakdown-detail {
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.spell-cast .fury-indicator-small {
+    display: inline-block;
+    background: #ff4500;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+/* Magic Tab - Spell List */
+.spell-list .item-name {
+    flex: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.spell-list .spell-level {
+    font-size: 0.75em;
+    background: #9c27b0;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 5px;
+}
+
+.spell-list .item-cn {
+    flex: 0 0 50px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.spell-list .item-casting-time {
+    flex: 1;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.spell-list .item-range {
+    flex: 1;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.spell-list .spell-cast {
+    color: #9c27b0;
+}
+
+.spell-list .spell-cast:hover {
+    color: #7b1fa2;
 }

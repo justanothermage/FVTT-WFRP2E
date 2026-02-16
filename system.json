@@ -60,8 +60,35 @@
         }
     },
 
-    "packs": [],
-    "packFolders": [],
+    "packs": [
+        {
+            "name": "careers",
+            "label": "WFRP2E Careers",
+            "path": "packs/careers.db",
+            "type": "career",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            }
+        },
+        {
+            "name": "Rollable Tables",
+            "label": "WFRP2E Rollable Tables",
+            "path": "packs/rollable-tables.db",
+            "type": "rollable-table",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            }
+        }
+    ],
+    "packFolders": [
+        {
+            "name": "WFRP2E Content",
+            "sorting": "a",
+            "packs": ["careers", "Rollable-Tables"]
+        }
+    ],
     "socket": false,
     "manifest": "Replace this with a link to the /latest release system.json",
     "download": "link to a .zip file of the current version",

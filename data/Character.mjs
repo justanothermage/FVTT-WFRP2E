@@ -6,6 +6,8 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel
             // Personal Details
             personalDetails: new fields.SchemaField({
                 race: new fields.StringField({initial: ""}),
+                religion: new fields.StringField({initial: ""}),
+                concept: new fields.StringField({initial: ""}),
                 // Astrology
                 starSign: new fields.StringField({initial: ""}),
                 doom: new fields.StringField({initial: ""}),
@@ -145,16 +147,6 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel
                     //current: new fields.NumberField({required: true, integer: true, initial: 0})
                 })
             }),
-
-            /* Armour Points by Location; placeholder until armor item gets implemented
-            armour: new fields.SchemaField({
-                head: new fields.NumberField({required: true, integer: true, initial: 0}),
-                body: new fields.NumberField({required: true, integer: true, initial: 0}),
-                leftArm: new fields.NumberField({required: true, integer: true, initial: 0}),
-                rightArm: new fields.NumberField({required: true, integer: true, initial: 0}),
-                leftLeg: new fields.NumberField({required: true, integer: true, initial: 0}),
-                rightLeg: new fields.NumberField({required: true, integer: true, initial: 0})
-            }),*/
 
             // Experience and Advancement
             experience: new fields.SchemaField({

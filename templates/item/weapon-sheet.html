@@ -21,11 +21,41 @@
                 </div>
                 <div class="form-field">
                     <label>Group</label>
-                    <input type="text" name="system.group" value="{{system.group}}" placeholder=""/>
+                    <select name="system.group">
+                        <option value="Ordinary" {{#if (eq system.group "Ordinary")}}selected{{/if}}>Ordinary</option>
+                        <option value="Cavalry" {{#if (eq system.group "Cavalry")}}selected{{/if}}>Cavalry</option>
+                        <option value="Crossbow" {{#if (eq system.group "Crossbow")}}selected{{/if}}>Crossbow</option>
+                        <option value="Engineer" {{#if (eq system.group "Engineer")}}selected{{/if}}>Engineer</option>
+                        <option value="Entangling" {{#if (eq system.group "Entangling")}}selected{{/if}}>Entangling</option>
+                        <option value="Flail" {{#if (eq system.group "Flail")}}selected{{/if}}>Flail</option>
+                        <option value="Gunpowder" {{#if (eq system.group "Gunpowder")}}selected{{/if}}>Gunpowder</option>
+                        <option value="Longbow" {{#if (eq system.group "Longbow")}}selected{{/if}}>Longbow</option>
+                        <option value="Parrying" {{#if (eq system.group "Parrying")}}selected{{/if}}>Parrying</option>
+                        <option value="Sling" {{#if (eq system.group "Sling")}}selected{{/if}}>Sling</option>
+                        <option value="Throwing" {{#if (eq system.group "Throwing")}}selected{{/if}}>Throwing</option>
+                        <option value="Two-handed" {{#if (eq system.group "Two-handed")}}selected{{/if}}>Two-handed</option>
+                    </select>
                 </div>
                 <div class="form-field">
                     <label>Availability</label>
-                    <input type="text" name="system.availability" value="{{system.availability}}" placeholder=""/>
+                    <select name="system.availability">
+                        <option value="Abundant" {{#if (eq system.availability "Abundant")}}selected{{/if}}>Abundant</option>
+                        <option value="Plentiful" {{#if (eq system.availability "Plentiful")}}selected{{/if}}>Plentiful</option>
+                        <option value="Common" {{#if (eq system.availability "Common")}}selected{{/if}}>Common</option>
+                        <option value="Average" {{#if (eq system.availability "Average")}}selected{{/if}}>Average</option>
+                        <option value="Scarce" {{#if (eq system.availability "Scarce")}}selected{{/if}}>Scarce</option>
+                        <option value="Rare" {{#if (eq system.availability "Rare")}}selected{{/if}}>Rare</option>
+                        <option value="Very Rare" {{#if (eq system.availability "Very Rare")}}selected{{/if}}>Very Rare</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label>Craftsmanship</label>
+                    <select name="system.craftsmanship">
+                        <option value="Poor" {{#if (eq system.craftsmanship "Poor")}}selected{{/if}}>Poor</option>
+                        <option value="Common" {{#if (eq system.craftsmanship "Common")}}selected{{/if}}>Common</option>
+                        <option value="Good" {{#if (eq system.craftsmanship "Good")}}selected{{/if}}>Good</option>
+                        <option value="Best" {{#if (eq system.craftsmanship "Best")}}selected{{/if}}>Best</option>
+                    </select>
                 </div>
             </div>
             <div class="form-row">

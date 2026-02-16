@@ -1,5 +1,6 @@
 import {DEFAULT_SKILLS} from "../modules/default-skills.mjs";
 import {WeaponAttackDialog} from "../modules/weapon-attack-dialog.mjs";
+import { SpellCastingDialog } from "../modules/spell-casting-dialog.mjs";
 
 export class WHCharacterSheet extends ActorSheet {
     
@@ -44,6 +45,7 @@ export class WHCharacterSheet extends ActorSheet {
         context.insanities = this.actor.items.filter(i => i.type === "insanity");
         context.weapons = this.actor.items.filter(i => i.type === "weapon");
         context.armours = this.actor.items.filter(i => i.type === "armour");
+        context.spells = this.actor.items.filter(i => i.type === "spell");
         
         // Debugging logs; adding these made items show up correctly to actor sheet
         console.log("Talents:", context.talents);
@@ -199,26 +201,7 @@ export class WHCharacterSheet extends ActorSheet {
                 actorData.secondary.magic.career = 0;
             }
 
-            if (actor.Data.characteristics) {
-                actorData.characteristics.ws.career = Math.max(...enteredCareers.map(c => c.system.careerWS || 0));
-                actorData.characteristics.bs.career = Math.max(...enteredCareers.map(c => c.system.careerBS || 0));
-                actorData.characteristics.s.career = Math.max(...enteredCareers.map(c => c.system.careerS || 0));
-                actorData.characteristics.t.career = Math.max(...enteredCareers.map(c => c.system.careerT || 0));
-                actorData.characteristics.ag.career = Math.max(...enteredCareers.map(c => c.system.careerAg || 0));
-                actorData.characteristics.int.career = Math.max(...enteredCareers.map(c => c.system.careerInt || 0));
-                actorData.characteristics.wp.career = Math.max(...enteredCareers.map(c => c.system.careerWP || 0));
-                actorData.characteristics.fel.career = Math.max(...enteredCareers.map(c => c.system.careerFel || 0));
-                /* console.log("Characteristic career advances calculates:", {
-                    ws: actorData.characteristics.ws.career,
-                    bs: actorData.characteristics.bs.career,
-                    s: actorData.characteristics.s.career,
-                    t: actorData.characteristics.t.career,
-                    ag: actorData.characteristics.ag.career,
-                    int: actorData.characteristics.int.career,
-                    wp: actorData.characteristics.wp.career,
-                    fel: actorData.characteristics.fel.career
-                })*/ 
-            }
+            return;
         }
 
         // Find max values for each characteristic
@@ -310,6 +293,9 @@ export class WHCharacterSheet extends ActorSheet {
 
         // Armour equip toggle
         html.find('.armour-equipped-toggle').change(this._onArmourEquippedToggle.bind(this));
+
+        // Spellcasting 
+        html.find('.spell-cast').click(this._onSpellCast.bind(this));
     }
 
     /**
@@ -320,13 +306,7 @@ export class WHCharacterSheet extends ActorSheet {
     async _onAddSkill(event) {
         event.preventDefault();
         
-        /* Generate console logs for debugging
-        console.log("Button clicked:", event.currentTarget);
-        console.log("Dataset:", event.currentTarget.dataset);
-        console.log("Category from dataset:", event.currentTarget.dataset.category);*/
-
         const category = event.currentTarget.dataset.category || "basic";
-        // console.log("Final category:", category); // More console logging
         const skills = this.actor.system.skills;
         const newSkill = {
             name: "",
@@ -337,8 +317,6 @@ export class WHCharacterSheet extends ActorSheet {
             modifier: 0
         };
         
-        // console.log("New skill being created:", newSkill); // Even MORE console logging
-
         await this.actor.update({
             "system.skills": [...skills, newSkill]
         });
@@ -428,11 +406,6 @@ export class WHCharacterSheet extends ActorSheet {
      * @private
      */
     async _onItemEdit(event) {
-        /* Debugging logs
-        console.log("!!! EDIT HANDLER CALLED !!!");
-        console.log("Event:", event);
-        console.log("Current target:", event.currentTarget);*/
-
         event.preventDefault();
         const itemId = event.currentTarget.dataset.itemId;
         const item = this.actor.items.get(itemId);
@@ -447,10 +420,6 @@ export class WHCharacterSheet extends ActorSheet {
      * @private
      */
     async _onItemDelete(event) {
-        /* Debugging logs
-        console.log("!!! DELETE HANDLER CALLED !!!");
-        console.log("Event:", event);*/
-
         event.preventDefault();
         const itemId = event.currentTarget.dataset.itemId;
         const item = this.actor.items.get(itemId);
@@ -546,8 +515,6 @@ export class WHCharacterSheet extends ActorSheet {
         const itemId = checkbox.dataset.itemId;
         const isEquipped = checkbox.checked;
 
-        // console.log("=== ARMOUR TOGGLE ==="); // Debugging log
-
         // Get the armour item from the actor
         const armour = this.actor.items.get(itemId);
 
@@ -557,11 +524,8 @@ export class WHCharacterSheet extends ActorSheet {
                 "flags.fvtt-wfrp2e.isEquipped": isEquipped
             })
 
-            // console.log("Flag updated via update()");
-
             // Verify
             const flagValue = armour.getFlag('fvtt-wfrp2e', 'isEquipped');
-            // console.log("Flag value:", flagValue);
         }
     }
     
@@ -671,5 +635,28 @@ export class WHCharacterSheet extends ActorSheet {
         await this.actor.update({
             "system.specialRules": specialRules
         });
+    }
+
+    /** 
+     * Handle casting a spell
+     * @param {Event} event   The originating click event
+     * @private
+     */
+    async _onSpellCast(event) {
+        event.preventDefault();
+        const itemId = event.currentTarget.dataset.itemId;
+        const spell = this.actor.items.get(itemId);
+
+        if (!spell) {
+            console.error("Spell not found!");
+            return;
+        }
+
+        // Create and show dialog window
+        const dialog = await SpellCastingDialog.create(this.actor, spell);
+
+        if (dialog) {
+            await dialog.executeCast();
+        }
     }
 }

@@ -3,37 +3,41 @@
     {{!-- Character Header --}}
     <header class="sheet-header">
         <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
-        <div class="header-fields">
-            <h1 class="charname">
-                <input name="name" type="text" value="{{actor.name}}" placeholder="Character Name"/>
-            </h1>
-            <div class="resource-row">
-                <div class="resource">
-                    <label>Race</label>
-                    <input type="text" name="system.personalDetails.race" value="{{system.personalDetails.race}}" />
-                    {{!-- Misc Special Rules --}}
+        <div class="header-content">
+            <div class="header-row-1">
+                <div class="header-field name-field">
+                    <label>Name</label>
+                    <input type="text" name="name" value="{{actor.name}}" placeholder="Character Name"/>
                 </div>
-        </div>
-                <div class="resource">
+                <div class="header-field">
                     <label>Current Career</label>
                     <span class="current-career-display">{{currentCareer}}</span>
                 </div>
-                <div class="resource full-width">
+                <div class="header-field previous-careers-field">
                     <label>Previous Careers</label>
                     <input type="text" name="system.previousCareersText" value="{{system.previousCareersText}}" placeholder="List previous careers"/>
                 </div>
             </div>
-        </div>
-        <div class="experience-header">
-            <h4>Experience</h4>
-            <div class="experience-fields">
-                <div class="xp-field">
-                    <label>Total XP</label>
-                    <input type="number" name="system.experience.total" value="{{system.experience.total}}" />
+            <div class="header-row-2">
+                <div class="header-field">
+                    <label>Race</label>
+                    <input type="text" name="system.personalDetails.race" value="{{system.personalDetails.race}}" placeholder=""/>
                 </div>
-                <div class="xp-field">
-                    <label>Spent XP</label>
-                    <input type="number" name="system.experience.spent" value="{{system.experience.spent}}" />
+                <div class="header-field">
+                    <label>Religion</label>
+                    <input type="text" name="system.personalDetails.religion" value="{{system.personalDetails.religion}}" placeholder=""/>
+                </div>
+                <div class="header-field concept-field">
+                    <label>Concept</label>
+                    <input type="text" name="system.personalDetails.concept" value="{{system.personalDetails.concept}}" placeholder=""/>
+                </div>
+                <div class="header-field xp-field">
+                    <label>XP</label>
+                    <div class="xp-inputs">
+                        <input type="number" name="system.experience.total" value="{{system.experience.total}}" placeholder="0"/>
+                        <span>/</span>
+                        <input type="number" name="system.experience.spent" value="{{system.experience.spent}}" placeholder="0"/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -516,7 +520,6 @@
 
         {{!-- Career Tab --}}
         <div class="tab career" data-group="primary" data-tab="career">
-            <p class="hint">Drag career items here from the Items directory to add them to this character.</p>
             
             {{#each careers as |career|}}
             <div class="career-item-simple {{#if career.system.isCurrent}}current-career{{/if}}">
@@ -588,7 +591,7 @@
 
             <h3>Weapons</h3>
             <div class="tab combat" data-group="primary" data-tab="combat">
-                <h3>Melee Weapons</h3>
+                <h4>Melee Weapons</h4>
                 <ol class="items-list combat-list">
                     <li class="item items-header">
                         <div class="item-name">Weapon</div>
@@ -626,7 +629,7 @@
                     {{/unless}}
                     {{/each}}                
                 </ol>
-                <h3>Ranged Weapons</h3>
+                <h4>Ranged Weapons</h4>
                 <ol class="items-list combat-list">
                     <li class="item items-header">
                         <div class="item-name">Weapon</div>
@@ -682,12 +685,12 @@
                     <div class="item-name">{{armour.name}}</div>
                     <div class="item-ap">{{armour.system.armourPoints}}</div>
                     <div class="item-locations-compact">
-                        {{#if armour.system.head}}<span class="location-badge">Head</span>{{/if}}
                         {{#if armour.system.armLeft}}<span class="location-badge">Left Arm</span>{{/if}}
+                        {{#if armour.system.head}}<span class="location-badge">Head</span>{{/if}}
                         {{#if armour.system.armRight}}<span class="location-badge">Right Arm</span>{{/if}}
                         {{#if armour.system.legLeft}}<span class="location-badge">Left Leg</span>{{/if}}
-                        {{#if armour.system.legRight}}<span class="location-badge">Right Leg</span>{{/if}}
                         {{#if armour.system.body}}<span class="location-badge">Body</span>{{/if}}
+                        {{#if armour.system.legRight}}<span class="location-badge">Right Leg</span>{{/if}}
                     </div>
                     <div class="item-controls">
                         <a class="item-control item-edit" data-item-id="{{armour.id}}" title="Edit Armour">
@@ -701,7 +704,39 @@
         {{!-- Spells Tab --}}
         <div class="tab spells" data-group="primary" data-tab="spells">
             <h3>Spells</h3>
-            <p><em>Spells will be added when item system is implemented</em></p>
+            <ol class="items-list spell-list">
+                <li class="item items-header">
+                    <div class="item-name">Spell</div>
+                    <div class="item-cn">CN</div>
+                    <div class="item-casting-time">Casting Time</div>
+                    <div class="item-range">Range</div>
+                    <div class="item-controls"></div>
+                </li>
+
+                {{#each spells as |spell|}}
+                <li class="item" data-item-id="{{spell.id}}">
+                    <div class="item-name">
+                        <img src="{{spell.img}}" title="{{spell.name}}" width="24" height="24"/>
+                        <h4>{{spell.name}}</h4>
+                        {{#if spell.system.level}}<span class="spell-level">{{spell.system.level}}</span>{{/if}}
+                    </div>
+                    <div class="item-cn">{{spell.system.castNumber}}</div>
+                    <div class="item-casting-time">{{spell.system.castTime}}</div>
+                    <div class="item-range">{{spell.system.range}}</div>
+                    <div class="item-controls">
+                        <a class="item-control spell-cast" data-item-id="{{spell.id}}" title="Cast {{spell.name}}">
+                            <i class="fas fa-magic"></i>
+                        </a>
+                        <a class="item-control item-edit" data-item-id="{{spell.id}}" title="Edit Spell">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="item-control item-delete" data-item-id="{{spell.id}}" title="Delete Spell">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </li>
+                {{/each}}
+            </ol>
         </div>
 
         {{!-- Inventory Tab --}}
@@ -722,7 +757,6 @@
                 </div>
             </div>
             
-            <h3>Inventory</h3>
             <!-- Weapons Section-->
              <div class="items-section">    
                 <h3 class="items-header">
@@ -775,7 +809,6 @@
                         <div class="item-equipped">Equipped</div>
                         <div class="item-name">Name</div>
                         <div class="item-locations">Locations</div>
-                        <div class="item-ap">AP</div>
                         <div class="item-enc">Enc</div>
                         <div class="item-controls"></div>
                     </li>
@@ -789,7 +822,13 @@
                             <img src="{{armour.img}}" title="{{armour.name}}" width="24" height="24"/>
                             <h4>{{armour.name}}</h4>
                         </div>
-                        <div class="item-ap">{{armour.system.armourPoints}}</div>
+                        <div class="item-locations">
+                            {{#if armour.system.head}}<span class="location-badge">Head</span>{{/if}}
+                            {{#if armour.system.armLeft}}<span class="location-badge">Left Arm</span>{{/if}}
+                            {{#if armour.system.armRight}}<span class="location-badge">Right Arm</span>{{/if}}
+                            {{#if armour.system.legLeft}}<span class="location-badge">Left Leg</span>{{/if}}
+                            {{#if armour.system.legRight}}<span class="location-badge">Right Leg</span>{{/if}}
+                            {{#if armour.system.body}}<span class="location-badge">Body</span>{{/if}}
                         <div class="item-enc">{{armour.system.encumbrance}}</div>
                         <div class="item-controls">
                             <a class="item-control item-edit" data-item-id="{{armour.id}}" title="Edit Armour">
@@ -804,6 +843,11 @@
                 </ol>
             </div>
              <!-- Insert other Inventory sections here -->
+            <div class="items-section">
+                <h3 class="items-header">
+                    <span>Equipment</span>
+                </h3>
+            </div>
         </div>
 
         {{!-- Biography Tab --}}
@@ -869,15 +913,15 @@
 
             {{!-- Description Section --}}
             <h3>Description</h3>
-            {{editor system.biography target="system.biography" button=true owner=owner editable=editable}}
+            {{editor enrichedBiography target="system.biography" button=true owner=owner editable=editable}}
 
             {{!-- History Section --}}
             <h3>History</h3>
-            {{editor system.history target="system.history" button=true owner=owner editable=editable}}
+            {{editor enrichedHistory target="system.history" button=true owner=owner editable=editable}}
             
             {{!-- Miscellaneous Notes Section --}}
             <h3>Miscellaneous Notes</h3>
-            {{editor system.notes target="system.notes" button=true owner=owner editable=editable}}
+            {{editor enrichedNotes target="system.notes" button=true owner=owner editable=editable}}
         </div>
 
     </section>

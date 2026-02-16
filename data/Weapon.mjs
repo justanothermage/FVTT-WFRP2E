@@ -2,18 +2,19 @@ export class WeaponDataModel extends foundry.abstract.TypeDataModel {
     static defineSchema() {
         const fields = foundry.data.fields;
         return {
-            description: new fields.StringField({initial: ""}),
+            description: new fields.StringField({initial: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}),
             cost: new fields.NumberField({initial: 0, min:0}),
             encumbrance: new fields.NumberField({initial: 0, min:0}),
             isRanged: new fields.BooleanField({initial: false}),
-            group: new fields.StringField({initial: ""}),
+            group: new fields.StringField({initial: "Ordinary"}),
             damage: new fields.NumberField({initial: 0, min:0}),
             range: new fields.NumberField({initial: 0, min:0}),
             reload: new fields.StringField({initial: ""}),
             qualities: new fields.StringField({initial: ""}),
             hasImpact: new fields.BooleanField({initial: false}),
             hasDefensive: new fields.BooleanField({initial: false}),
-            availability: new fields.StringField({initial: ""})
+            availability: new fields.StringField({initial: "Average"}),
+            craftsmanship: new fields.StringField({initial: "Common"}),
         };
     }
 }
