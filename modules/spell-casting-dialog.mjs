@@ -277,16 +277,21 @@ export class SpellCastingDialog extends Dialog {
 
         // Build modifiers breakdown
         let modifiersBreakdown = `<div class="modifiers-breakdown">`;
+        const hasModifiers = data.channellingBonus > 0 || data.ingredientBonus > 0 || data.miscModifier !== 0;
+
         if (data.channellingBonus > 0) {
-            modifiersBreakdown += `<div>Channelling: +${data.channellingBonus}</div>`;
+            modifiersBreakdown = `<div class="modifiers-breakdown">`;
+            if (data.channellingBonus > 0) {
+                modifiersBreakdown += `<div>Channelling: +${data.channellingBonus}</div>`;
+            }
+            if (data.ingredientBonus > 0) {
+                modifiersBreakdown += `<div>Ingredient: +${data.ingredientBonus}</div>`;
+            }
+            if (data.miscModifier !== 0) {
+                modifiersBreakdown += `<div>Misc: ${data.miscModifier >= 0 ? '+' : ''}${data.miscModifier}</div>`;
+            }
+            modifiersBreakdown += `</div>`;
         }
-        if (data.ingredientBonus > 0) {
-            modifiersBreakdown += `<div>Ingredient: +${data.ingredientBonus}</div>`;
-        }
-        if (data.miscModifier !== 0) {
-            modifiersBreakdown += `<div>Misc: ${data.miscModifier >= 0 ? '+' : ''}${data.miscModifier}</div>`;
-        }
-        modifiersBreakdown += `</div>`;
 
         // Determine outcome
         let outcome = '';
@@ -345,7 +350,12 @@ export class SpellCastingDialog extends Dialog {
                         }
                         damageBreakdown += ` = ${roll.total}</div>`;
                     } else {
-                        damageBreakdown += `<div class="fury-roll">Ulric's Fury: +${roll.die} damage</div>`;
+                        // Fury rolls
+                        if (roll.wpSuccess) {
+                            damageBreakdown += `<div class="fury-roll fury-success">Ulric's Fury: WP Check (${roll.wpRoll}/${roll.wpTarget}) <strong>Success!</strong> +${roll.die} damage</div>`;
+                        } else {
+                            damageBreakdown += `<div class="fury-roll fury-fail">Ulric's Fury: WP Check (${roll.wpRoll}/${roll.wpTarget}) <strong>Failed</strong> - No additional damage</div>`;
+                        }
                     }
                 });
 
@@ -421,13 +431,18 @@ export class SpellCastingDialog extends Dialog {
 
                 ${healingBreakdown}
                 
-                <div class="spell-effects">
-                    ${this.spell.system.damage && !data.damageResults ? `<div><strong>Damage:</strong> ${this.spell.system.damage}</div>` : ''}
-                    ${this.spell.system.healing && !data.healingResults ? `<div><strong>Healing:</strong> ${this.spell.system.healing}</div>` : ''}
-                    ${this.spell.system.attacks && !data.damageResults ? `<div><strong>Attacks:</strong> ${this.spell.system.attacks}</div>` : ''}
-                </div>
+                ${data.isSuccess && (
+                    (this.spell.system.damage && this.spell.system.damage !== "None" && !data.damageResults) ||
+                    (this.spell.system.healing && this.spell.system.healing !== "None" && !data.healingResults) ||
+                    (this.spell.system.attacks && this.spell.system.attacks !== "None" && !data.damageResults)
+                ) ? `<div class="spell-effects">
+                    ${this.spell.system.damage && this.spell.system.damage !== "None" && !data.damageResults ? `<div><strong>Damage:</strong> ${this.spell.system.damage}</div>` : ''}
+                    ${this.spell.system.healing && this.spell.system.healing !== "None" && !data.healingResults ? `<div><strong>Healing:</strong> ${this.spell.system.healing}</div>` : ''}
+                    ${this.spell.system.attacks && this.spell.system.attacks !== "None" && !data.damageResults ? `<div><strong>Attacks:</strong> ${this.spell.system.attacks}</div>` : ''}
+                </div>` : ''}
 
                 ${data.isSuccess ? `<div class="spell-description">${await TextEditor.enrichHTML(this.spell.system.description, {async: true})}</div>` : ''}
+
             </div>
         `;
 
@@ -539,22 +554,44 @@ export class SpellCastingDialog extends Dialog {
         let keepRolling = true;
 
         while (keepRolling) {
-            // Roll fury damage
-            const furyDamageRoll = new Roll("1d10");
-            await furyDamageRoll.evaluate();
-            const furyDamageDie = furyDamageRoll.total;
+            // Roll WP check to confirm Ulric's Fury
+            const wpTarget = this.actor.system.characteristics.wp.current;
+            const wpRoll = new Roll("1d100");
+            await wpRoll.evaluate();
+            const wpSuccess = wpRoll.total <= wpTarget;
 
-            totalDamage += furyDamageDie;
-            furyRolls.push({
-                die: furyDamageDie,
-                isFury: true
-            });
+            if (wpSuccess) {
+                // WP check succeeded - roll fury damage
+                const furyDamageRoll = new Roll("1d10");
+                await furyDamageRoll.evaluate();
+                const furyDamageDie = furyDamageRoll.total;
 
-            // Check if fury continues 
-            if (furyDamageDie !== 10) {
+                totalDamage += furyDamageDie;
+                furyRolls.push({
+                    die: furyDamageDie,
+                    wpRoll: wpRoll.total,
+                    wpTarget: wpTarget,
+                    wpSuccess: true,
+                    isFury: true
+                });
+
+                // Check if fury continues (rolled a 10)
+                if (furyDamageDie !== 10) {
+                    keepRolling = false;
+                }
+            } else {
+                // WP check failed - fury ends
+                furyRolls.push({
+                    die: null,
+                    wpRoll: wpRoll.total,
+                    wpTarget: wpTarget,
+                    wpSuccess: false,
+                    isFury: true
+                });
                 keepRolling = false;
             }
         }
+
         return { rolls: furyRolls, totalDamage: totalDamage };
     }
 

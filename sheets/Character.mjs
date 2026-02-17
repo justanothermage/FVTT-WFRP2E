@@ -75,8 +75,7 @@ export class WHCharacterSheet extends ActorSheet {
         // Get armour and add equipment status from flags 
         context.armour = this.actor.items.filter(i => i.type === "armour").map(armour => {
             const isEquipped = armour.getFlag('fvtt-wfrp2e', 'isEquipped') || false;
-            // console.log(`Armor ${armour.name}: isEquipped flag = ${isEquipped}`); // Debugging log
-
+        
             return {
                 id: armour.id,
                 _id: armour._id,
@@ -87,8 +86,6 @@ export class WHCharacterSheet extends ActorSheet {
             };
         });
 
-        // console.log("Armour context:", context.armour);// Debugging log 
-
         // Calculate total armour for each location
         context.totalArmour = {
             head: this.actor.getTotalArmourForLocation('head'),
@@ -98,7 +95,13 @@ export class WHCharacterSheet extends ActorSheet {
             armLeft: this.actor.getTotalArmourForLocation('armLeft'),
             armRight: this.actor.getTotalArmourForLocation('armRight')
         };
-        // console.log("Total armour:", context.totalArmour);
+
+        // Store collapsed state of spell sections
+        context.spellSectionsCollapsed = {
+            petty: this.actor.getFlag('fvtt-wfrp2e', 'spellSection-petty') || false,
+            lesser: this.actor.getFlag('fvtt-wfrp2e', 'spellSection-lesser') || false,
+            lore: this.actor.getFlag('fvtt-wfrp2e', 'spellSection-lore') || false
+        }
 
         return context;
     }
@@ -296,6 +299,27 @@ export class WHCharacterSheet extends ActorSheet {
 
         // Spellcasting 
         html.find('.spell-cast').click(this._onSpellCast.bind(this));
+
+        // Collapsavle sections
+        html.find('.spell-section-header.collapsible').click(this._onToggleSpellSection.bind(this));
+
+        // Initialize collapsed states from flags 
+        html.find('.spell-section-header.collapsible').each((i, header) => {
+            const section = header.dataset.section;
+            const isCollapsed = this.actor.getFlag('fvtt-wfrp2e', `spellSection-${section}`) || false;
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+
+            if (isCollapsed) {
+                content.style.display = 'none';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                content.style.display = 'block';
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
     }
 
     /**
@@ -657,6 +681,34 @@ export class WHCharacterSheet extends ActorSheet {
 
         if (dialog) {
             await dialog.executeCast();
+        }
+    }
+
+    /**
+     * Handle collapsible spell sections
+     * @param {Event} event   The originating click event
+     * @private
+     */
+    async _onToggleSpellSection(event) {
+        event.preventDefault();
+        const header = event.currentTarget;
+        const section = header.dataset.section;
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('.toggle-icon');
+
+        // Toggle collapsed state
+        const isCurrentlyVisible = !content.style.display || content.style.display === 'block';
+
+        if (isCurrentlyVisible) {
+            content.style.display = 'none';
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-right');
+            await this.actor.setFlag('fvtt-wfrp2e', `spellSection-${section}`, true);
+        } else {
+            content.style.display = 'block';
+            icon.classList.remove('fa-chevron-right');
+            icon.classList.add('fa-chevron-down');
+            await this.actor.setFlag('fvtt-wfrp2e', `spellSection-${section}`, false);
         }
     }
 }

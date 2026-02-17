@@ -704,39 +704,152 @@
         {{!-- Spells Tab --}}
         <div class="tab spells" data-group="primary" data-tab="spells">
             <h3>Spells</h3>
-            <ol class="items-list spell-list">
-                <li class="item items-header">
-                    <div class="item-name">Spell</div>
-                    <div class="item-cn">CN</div>
-                    <div class="item-casting-time">Casting Time</div>
-                    <div class="item-range">Range</div>
-                    <div class="item-controls"></div>
-                </li>
+            {{!-- Petty Magic Section --}}
+            <div class="spell-section">
+                <h4 class="spell-section-header collapsible" data-section="petty">
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                    Petty Magic
+                </h4>
+                <ol class="spell-list collapsible-content" data-section="petty">
+                    <li class="item items-header">
+                        <div class="item-img-cell"></div>
+                        <div class="item-name">Spell</div>
+                        <div class="item-cn">Cast Num.</div>
+                        <div class="item-casting-time">Casting Time</div>
+                        <div class="item-range">Range</div>
+                        <div class="item-duration">Duration</div>
+                        <div class="item-controls"></div>
+                    </li>
 
-                {{#each spells as |spell|}}
-                <li class="item" data-item-id="{{spell.id}}">
-                    <div class="item-name">
-                        <img src="{{spell.img}}" title="{{spell.name}}" width="24" height="24"/>
-                        <h4>{{spell.name}}</h4>
-                        {{#if spell.system.level}}<span class="spell-level">{{spell.system.level}}</span>{{/if}}
-                    </div>
-                    <div class="item-cn">{{spell.system.castNumber}}</div>
-                    <div class="item-casting-time">{{spell.system.castTime}}</div>
-                    <div class="item-range">{{spell.system.range}}</div>
-                    <div class="item-controls">
-                        <a class="item-control spell-cast" data-item-id="{{spell.id}}" title="Cast {{spell.name}}">
-                            <i class="fas fa-magic"></i>
-                        </a>
-                        <a class="item-control item-edit" data-item-id="{{spell.id}}" title="Edit Spell">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a class="item-control item-delete" data-item-id="{{spell.id}}" title="Delete Spell">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </div>
-                </li>
-                {{/each}}
-            </ol>
+                    {{#each spells as |spell|}}
+                    {{#if (eq spell.system.level "Petty")}}
+
+                    <li class="item" data-item-id="{{spell.id}}">
+                        <div class="item-img-cell">
+                            <img src="{{spell.img}}" class="item-img" title="{{spell.name}}" width="24" height="24"/>
+                        </div>
+                        <div class="item-name">
+                            <h4>{{spell.name}}</h4>
+                        </div>
+                        <div class="item-cn">{{spell.system.castNumber}}</div>
+                        <div class="item-casting-time">{{spell.system.castTime}}</div>
+                        <div class="item-range">{{spell.system.range}}</div>
+                        <div class="item-duration">{{spell.system.duration}}</div>
+                        <div class="item-controls">
+                            <a class="item-control spell-cast" data-item-id="{{spell.id}}" title="Cast {{spell.name}}">
+                                <i class="fas fa-magic"></i>
+                            </a>
+                            <a class="item-control item-edit" data-item-id="{{spell.id}}" title="Edit Spell">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a class="item-control item-delete" data-item-id="{{spell.id}}" title="Delete Spell">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </li>
+
+                    {{/if}}
+                    {{/each}}
+                </ol>
+            </div>
+
+            {{!-- Lesser Magic Section --}}
+            <div class="spell-section">
+                <h4 class="spell-section-header collapsible" data-section="lesser">
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                    Lesser Magic
+                </h4>
+                <ol class="spell-list collapsible-content" data-section="lesser">
+                    <li class="item items-header">
+                        <div class="item-img-cell"></div>
+                        <div class="item-name">Spell</div>
+                        <div class="item-cn">Cast Num.</div>
+                        <div class="item-casting-time">Casting Time</div>
+                        <div class="item-range">Range</div>
+                        <div class="item-duration">Duration</div>
+                        <div class="item-controls"></div>
+                    </li>
+
+                    {{#each spells as |spell|}}
+                    {{#if (eq spell.system.level "Lesser")}}
+
+                    <li class="item" data-item-id="{{spell.id}}">
+                        <div class="item-img-cell">
+                            <img src="{{spell.img}}" class="item-img" title="{{spell.name}}" width="24" height="24"/>
+                        </div>
+                        <div class="item-name">
+                            <h4>{{spell.name}}</h4>
+                        </div>
+                        <div class="item-cn">{{spell.system.castNumber}}</div>
+                        <div class="item-casting-time">{{spell.system.castTime}}</div>
+                        <div class="item-range">{{spell.system.range}}</div>
+                        <div class="item-duration">{{spell.system.duration}}</div>
+                        <div class="item-controls">
+                            <a class="item-control spell-cast" data-item-id="{{spell.id}}" title="Cast {{spell.name}}">
+                                <i class="fas fa-magic"></i>
+                            </a>
+                            <a class="item-control item-edit" data-item-id="{{spell.id}}" title="Edit Spell">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a class="item-control item-delete" data-item-id="{{spell.id}}" title="Delete Spell">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </li>
+
+                    {{/if}}
+                    {{/each}}
+                </ol>
+            </div>
+
+            {{!-- Lore Magic Section --}}
+            <div class="spell-section">
+                <h4 class="spell-section-header collapsible" data-section="lore">
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                    Lore Magic
+                </h4>
+                <ol class="spell-list collapsible-content" data-section="lore">
+                    <li class="item items-header">
+                        <div class="item-img-cell"></div>
+                        <div class="item-name">Spell</div>
+                        <div class="item-cn">Cast Num.</div>
+                        <div class="item-casting-time">Casting Time</div>
+                        <div class="item-range">Range</div>
+                        <div class="item-duration">Duration</div>
+                        <div class="item-controls"></div>
+                    </li>
+                    
+                    {{#each spells as |spell|}}
+                    {{#if (eq spell.system.level "Lore")}}
+
+                   <li class="item" data-item-id="{{spell.id}}">
+                        <div class="item-img-cell">
+                            <img src="{{spell.img}}" class="item-img" title="{{spell.name}}" width="24" height="24"/>
+                        </div>
+                        <div class="item-name">
+                            <h4>{{spell.name}}</h4>
+                        </div>
+                        <div class="item-cn">{{spell.system.castNumber}}</div>
+                        <div class="item-casting-time">{{spell.system.castTime}}</div>
+                        <div class="item-range">{{spell.system.range}}</div>
+                        <div class="item-duration">{{spell.system.duration}}</div>
+                        <div class="item-controls">
+                            <a class="item-control spell-cast" data-item-id="{{spell.id}}" title="Cast {{spell.name}}">
+                                <i class="fas fa-magic"></i>
+                            </a>
+                            <a class="item-control item-edit" data-item-id="{{spell.id}}" title="Edit Spell">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a class="item-control item-delete" data-item-id="{{spell.id}}" title="Delete Spell">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                   </li>
+
+                    {{/if}}
+                    {{/each}}
+                </ol>
+            </div>
         </div>
 
         {{!-- Inventory Tab --}}

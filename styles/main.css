@@ -1570,7 +1570,7 @@
     height: 30px;
     line-height: 30px;
     text-align: center;
-    background: #9c27b0;
+    background: #000000;
     color: white;
     border-radius: 3px;
     margin: 0 2px;
@@ -1582,7 +1582,7 @@
 }
 
 .spell-cast .die-result.miscast {
-    background: #ff9800;
+    background: #ff0000;
 }
 
 .spell-cast .modifiers-breakdown {
@@ -1624,7 +1624,7 @@
 }
 
 .spell-cast .miscast-warning {
-    background: #ff9800;
+    background: #eeff00;
     color: white;
     padding: 10px;
     border-radius: 5px;
@@ -1717,38 +1717,76 @@
 }
 
 /* Magic Tab - Spell List */
-.spell-list .item-name {
-    flex: 3;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.spell-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.spell-list .spell-level {
-    font-size: 0.75em;
-    background: #9c27b0;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin-left: 5px;
+.spell-list .item,
+.spell-list .items-header {
+    display: grid !important;
+    grid-template-columns: 32px 168px 80px 140px 100px 120px 80px !important;
+    gap: 0 !important;
+    padding: 4px 8px !important;
+    border-bottom: 1px solid #ccc !important;
+    justify-content: unset !important;
+    align-items: unset !important;
+    flex: unset !important;
 }
 
-.spell-list .item-cn {
-    flex: 0 0 50px;
-    text-align: center;
+.spell-list .item-img-cell {
+    display: flex !important;
+    align-items: center !important;
+    flex: unset !important;
+}
+
+.spell-list .items-header {
     font-weight: bold;
+    background: rgba(0, 0, 0, 0.05);
+    border-bottom: 2px solid #999 !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 4px !important;
 }
 
-.spell-list .item-casting-time {
-    flex: 1;
-    text-align: center;
-    font-size: 0.9em;
+.spell-list .item-name {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    overflow: hidden;
+    padding-left: 0 !important;
+    flex: unset !important;
 }
 
-.spell-list .item-range {
-    flex: 1;
+.spell-list .item-name h4 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: normal;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.spell-list .item-cn,
+.spell-list .item-casting-time,
+.spell-list .item-range,
+.spell-list .item-duration {
     text-align: center;
-    font-size: 0.9em;
+    white-space: normal;
+    word-wrap: break-word;
+    align-self: center;
+    flex: unset !important;
+}
+
+.spell-list .item-controls {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 4px !important;
+    align-items: center !important;
+    flex: unset !important;
+}
+
+.spell-list .item-controls a {
+    flex-shrink: 0;
 }
 
 .spell-list .spell-cast {
@@ -1757,4 +1795,35 @@
 
 .spell-list .spell-cast:hover {
     color: #7b1fa2;
+}
+
+/* Spell Section Styling */
+.spell-section {
+    margin-bottom: 1em;
+}
+
+.spell-section-header.collapsible {
+    cursor: pointer;
+    user-select: none;
+    padding: 0.5em;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #999;
+    border-radius: 3px;
+    margin-bottom: 0.25em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.spell-section-header.collapsible:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.spell-section-header .toggle-icon {
+    transition: transform 0.2s;
+    font-size: 0.8em;
+}
+
+.spell-section .collapsible-content {
+    transition: all 0.3s ease;
 }
