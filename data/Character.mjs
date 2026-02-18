@@ -111,7 +111,8 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel
                     advances: new fields.NumberField({required: true, integer: true, initial: 0}),
                     misc:new fields.NumberField({required:true,integer:true,initial : 0}),
                     max: new fields.NumberField({required: true, integer: true, initial: 0}),
-                    //current: new fields.NumberField({required: true, integer: true, initial: 0})
+                    current: new fields.NumberField({required: true, integer: true, initial: 0}),
+                    value: new fields.NumberField({required: true, integer: true, initial: 0})
                 }),
                 strengthBonus: new fields.SchemaField({
                     value: new fields.NumberField({required: true, integer: true, initial: 0}),

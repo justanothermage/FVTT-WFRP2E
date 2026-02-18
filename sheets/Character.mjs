@@ -96,12 +96,57 @@ export class WHCharacterSheet extends ActorSheet {
             armRight: this.actor.getTotalArmourForLocation('armRight')
         };
 
+        // Build armour breakdown (we already have totalArmour from earlier)
+        const tb = this.actor.system.secondary.toughnessBonus.value || 0;
+
+        context.armourBreakdown = {
+            head: { 
+                tb: tb, 
+                equipped: context.totalArmour.head - tb, 
+                total: context.totalArmour.head 
+            },
+            body: { 
+                tb: tb, 
+                equipped: context.totalArmour.body - tb, 
+                total: context.totalArmour.body 
+            },
+            armLeft: { 
+                tb: tb, 
+                equipped: context.totalArmour.armLeft - tb, 
+                total: context.totalArmour.armLeft 
+            },
+            armRight: { 
+                tb: tb, 
+                equipped: context.totalArmour.armRight - tb, 
+                total: context.totalArmour.armRight 
+            },
+            legLeft: { 
+                tb: tb, 
+                equipped: context.totalArmour.legLeft - tb, 
+                total: context.totalArmour.legLeft 
+            },
+            legRight: { 
+                tb: tb, 
+                equipped: context.totalArmour.legRight - tb, 
+                total: context.totalArmour.legRight 
+            }
+        };
+
         // Store collapsed state of spell sections
         context.spellSectionsCollapsed = {
             petty: this.actor.getFlag('fvtt-wfrp2e', 'spellSection-petty') || false,
             lesser: this.actor.getFlag('fvtt-wfrp2e', 'spellSection-lesser') || false,
             lore: this.actor.getFlag('fvtt-wfrp2e', 'spellSection-lore') || false
         }
+
+        // Compute novement values 
+        const mov = this.actor.system.secondary.movement.current || 0;
+        context.movementValues = {
+            walk: mov,
+            run: mov * 2,
+            charge: mov * 3,
+            flee: mov * 6
+        };
 
         return context;
     }
@@ -293,6 +338,9 @@ export class WHCharacterSheet extends ActorSheet {
                 });
             };
         });
+
+        // Initiative roll
+        html.find('.roll-initiative-btn').click(this._onRollInitiative.bind(this));
 
         // Armour equip toggle
         html.find('.armour-equipped-toggle').change(this._onArmourEquippedToggle.bind(this));
@@ -503,6 +551,61 @@ export class WHCharacterSheet extends ActorSheet {
         } else {
             console.error("Career not found with ID:", itemId);
         }
+    }
+
+    /**
+     * Handle rolling initiative
+     * @param {Event} event   The originating click event
+     * @private
+     */
+    async _onRollInitiative(event) {
+        event.preventDefault();
+        
+        const agility = this.actor.system.characteristics.ag.current || 0;
+        
+        // Roll 1d10
+        const roll = await new Roll("1d10").evaluate();
+        const initiative = roll.total + agility;
+        
+        // Build chat message
+        let flavor = `<div class="wfrp-roll initiative-roll">
+            <div class="roll-header">
+                <h3>Initiative Roll</h3>
+                <div class="actor-name">${this.actor.name}</div>
+            </div>
+            <div class="roll-result">
+                <div class="roll-details">
+                    <span class="roll-label">1d10:</span>
+                    <span class="roll-value">${roll.total}</span>
+                </div>
+                <div class="roll-details">
+                    <span class="roll-label">Agility:</span>
+                    <span class="roll-value">+${agility}</span>
+                </div>
+            </div>
+            <div class="initiative-total">
+                <strong>Initiative: ${initiative}</strong>
+            </div>
+        </div>`;
+        
+        // Send to chat
+        await roll.toMessage({
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            flavor: flavor
+        });
+        
+        // If there's an active combat, try to add to combat tracker
+        if (game.combat) {
+            const combatant = game.combat.combatants.find(c => c.actorId === this.actor.id);
+            if (combatant) {
+                await game.combat.setInitiative(combatant.id, initiative);
+                ui.notifications.info(`${this.actor.name} rolled ${initiative} for initiative`);
+            } else {
+                ui.notifications.warn("This actor is not in the active combat");
+            }
+        }
+        
+        return roll;
     }
 
     /**

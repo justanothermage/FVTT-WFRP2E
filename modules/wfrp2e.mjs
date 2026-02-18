@@ -48,6 +48,13 @@ Hooks.once("init", function () {
         return a === b;
     });
 
+    // Set initiative formula
+    CONFIG.Combat.initiative = {
+        formula: "1d10 + @characteristics.ag.current",
+        decimals: 0
+    };
+
+
     // Register item sheets
     Items.registerSheet('fvtt-wfrp2e', WHCareerSheet, {
         types: ["career"],

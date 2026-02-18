@@ -561,32 +561,126 @@
 
         {{!-- Combat Tab --}}
         <div class="tab combat" data-group="primary" data-tab="combat">
-            <h3>Armour Points</h3>
-            <div class="armour-grid">
-                <div class="armour-location">
-                    <label>Head</label>
-                    <div class="armour-value">{{totalArmour.head}}</div>
+
+            {{!-- Combat Top Row --}}
+            <div class="combat-top-row">
+
+                {{!-- Wound Tracker --}}
+                <div class="combat-panel wound-panel">
+                    <h3>Wounds</h3>
+                    <div class="wound-display">
+                        <div class="wound-row">
+                            <label>Current</label>
+                            <input type="number" name="system.secondary.wounds.value" value="{{system.secondary.wounds.value}}" min="0" max="{{system.secondary.wounds.max}}" />
+                        </div>
+                        <div class="wound-row">
+                            <label>Max</label>
+                            <span class="wound-max-value">{{system.secondary.wounds.max}}</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="armour-location">
-                    <label>Body</label>
-                    <div class="armour-value">{{totalArmour.body}}</div>
+
+                {{!-- Armour Value by Location --}}
+                <div class="combat-panel armour-panel">
+                    <h3>Armour Points</h3>
+                    <div class="armour-body-display">
+
+                        {{!-- Head Row --}}
+                        <div class="armour-body-row head-row">
+                            <div class="armour-location-box head-box">
+                                <label>Head</label>
+                                <div class="ap-total">{{armourBreakdown.head.total}}</div>
+                                <div class="ap-breakdown">
+                                    <div class="ap-breakdown-box tb-box">{{armourBreakdown.head.tb}}</div>
+                                    <div class="ap-breakdown-box armour-box">{{armourBreakdown.head.equipped}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{!-- Arms Row --}}
+                        <div class="armour-body-row arms-row">
+                            <div class="armour-location-box arm-box">
+                                <label>Left Arm</label>
+                                <div class="ap-total">{{armourBreakdown.armLeft.total}}</div>
+                                <div class="ap-breakdown">
+                                    <div class="ap-breakdown-box tb-box">{{armourBreakdown.armLeft.tb}}</div>
+                                    <div class="ap-breakdown-box armour-box">{{armourBreakdown.armLeft.equipped}}</div>
+                                </div>
+                            </div>
+
+                            <div class="armour-location-box arm-box">
+                                <label>Right Arm</label>
+                                <div class="ap-total">{{armourBreakdown.armRight.total}}</div>
+                                <div class="ap-breakdown">
+                                    <div class="ap-breakdown-box tb-box">{{armourBreakdown.armRight.tb}}</div>
+                                    <div class="ap-breakdown-box armour-box">{{armourBreakdown.armRight.equipped}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{!-- Body Row --}}
+                        <div class="armour-body-row body-row">
+                            <div class="armour-location-box body-box">
+                                <label>Body</label>
+                                <div class="ap-total">{{armourBreakdown.body.total}}</div>
+                                <div class="ap-breakdown">
+                                    <div class="ap-breakdown-box tb-box">{{armourBreakdown.body.tb}}</div>
+                                    <div class="ap-breakdown-box armour-box">{{armourBreakdown.body.equipped}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{!-- Legs Row --}}
+                        <div class="armour-body-row legs-row">
+                            <div class="armour-location-box leg-box">
+                                <label>Left Leg</label>
+                                <div class="ap-total">{{armourBreakdown.legLeft.total}}</div>
+                                <div class="ap-breakdown">
+                                    <div class="ap-breakdown-box tb-box">{{armourBreakdown.legLeft.tb}}</div>
+                                    <div class="ap-breakdown-box armour-box">{{armourBreakdown.legLeft.equipped}}</div>
+                                </div>
+                            </div>
+
+                            <div class="armour-location-box leg-box">
+                                <label>Right Leg</label>
+                                <div class="ap-total">{{armourBreakdown.legRight.total}}</div>
+                                <div class="ap-breakdown">
+                                    <div class="ap-breakdown-box tb-box">{{armourBreakdown.legRight.tb}}</div>
+                                    <div class="ap-breakdown-box armour-box">{{armourBreakdown.legRight.equipped}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
                 </div>
-                <div class="armour-location">
-                    <label>Left Arm</label>
-                    <div class="armour-value">{{totalArmour.armLeft}}</div>
+
+                {{!-- Movement --}}
+                <div class="combat-panel movement-panel">
+                    <h3>Movement</h3>
+                    <div class="movement-grid">
+                        <div class="movement-row">
+                            <label>Walk</label>
+                            <span>{{movementValues.walk}}</span>
+                        </div>
+                        <div class="movement-row">
+                            <label>Run</label>
+                            <span>{{movementValues.run}}</span>
+                        </div>
+                        <div class="movement-row">
+                            <label>Charge</label>
+                            <span>{{movementValues.charge}}</span>
+                        </div>
+                        <div class="movement-row">
+                            <label>Flee</label>
+                            <span>{{movementValues.flee}}</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="roll-initiative-btn" title="Roll Initiative (1d10 + Agility)">
+                        <i class="fas fa-dice-d10"></i> Roll Initiative
+                    </button>
                 </div>
-                <div class="armour-location">
-                    <label>Right Arm</label>
-                    <div class="armour-value">{{totalArmour.armRight}}</div>
-                </div>
-                <div class="armour-location">
-                    <label>Left Leg</label>
-                    <div class="armour-value">{{totalArmour.legLeft}}</div>
-                </div>
-                <div class="armour-location">
-                    <label>Right Leg</label>
-                    <div class="armour-value">{{totalArmour.legRight}}</div>
-                </div>
+
             </div>
 
             <h3>Weapons</h3>

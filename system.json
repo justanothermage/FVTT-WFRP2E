@@ -100,5 +100,5 @@
         "gridUnits": "yards"
     },
 
-    "primaryTokenAttribute": "system.secondary.wounds"
+    "primaryTokenAttribute": "system.secondary.wounds.value"
 }

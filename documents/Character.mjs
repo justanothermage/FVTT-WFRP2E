@@ -2,12 +2,6 @@ import { showRollDialog } from "../modules/roll-dialog.mjs";
 
 export class WHCharacter extends Actor {
     
-    /** @override */
-    prepareDerivedData() {
-        super.prepareDerivedData();
-        // The DataModel's prepareDerivedData handles everything
-    }
-
     /**
      * Roll a characteristic test (d100 roll-under)
      * @param {string} characteristic - The characteristic key (ws, bs, s, t, ag, int, wp, fel)
@@ -139,11 +133,6 @@ export class WHCharacter extends Actor {
         super.prepareDerivedData();
         const systemData = this.system;
 
-        /* Debugging logs
-        console.log("prepareDerivedData running for:", this.name);
-        console.log("systemData.secondary exists?", !!systemData.secondary);
-        console.log("systemData.secondary:", systemData.secondary);*/
-        
         // Calculate current characteristic values (New Method)
         if (systemData.characteristics) {
             for (let [key, char] of Object.entries(systemData.characteristics)) {
@@ -154,40 +143,48 @@ export class WHCharacter extends Actor {
             }
         }
         // Calculate current secondary characteristics (New Method)
-        // console.log("About to process secondary profile..."); // Debugging log
         if (systemData.secondary) {
-            // console.log("Inside secondary profile block"); // Debugging log
-            // console.log("Secondary keys:", Object.keys(systemData.secondary)); // Debugging log
             for (let [key, stat] of Object.entries(systemData.secondary)) {
-                // console.log(`Processing secondary.${key}:`, stat); // Debugging log
                 if (stat && typeof Object.entries(systemData.secondary)) {
                     if (stat && typeof stat === "object") {
-                        if (
-                            key === "strengthBonus" || key === "toughnessBonus" || key === 'insanityPoints' || key === 'fatePoints') { 
+                        // Skip special characteristics that are calculated differently
+                        if (key === "strengthBonus" || key === "toughnessBonus" || key === 'insanityPoints' || key === 'fatePoints') { 
                             continue;
                         }
-                        stat.current = (stat.initial || 0) + (stat.talents || 0) + (stat.advances || 0) + (stat.misc || 0);
-                        console.log(`secondary.${key}.current = ${stat.current}`);
+                        // Wounds needs special handling
+                        if (key === "wounds") {
+                            stat.max = (stat.initial || 0) + (stat.talents || 0) + (stat.career || 0) + (stat.advances || 0) + (stat.misc || 0);
+                        } else {
+                            // Everything else (attacks, movement, magic) uses 'current'
+                            stat.current = (stat.initial || 0) + (stat.talents || 0) + (stat.career || 0) + (stat.advances || 0) + (stat.misc || 0);
+                        }
                     } 
                 }
             }
             if (systemData.characteristics.s && systemData.secondary.strengthBonus) {
                 systemData.secondary.strengthBonus.value = Math.floor(systemData.characteristics.s.current / 10) + (systemData.secondary.strengthBonus.misc || 0);
-                //console.log(`strengthBonus.value = ${systemData.secondary.strengthBonus.value}`);
             }
             if (systemData.characteristics.t && systemData.secondary.toughnessBonus) {
                 systemData.secondary.toughnessBonus.value = Math.floor(systemData.characteristics.t.current / 10) + (systemData.secondary.toughnessBonus.misc || 0);
-                //console.log(`toughnessBonus.value = ${systemData.secondary.toughnessBonus.value}`);
             }
             if (systemData.secondary.insanityPoints) {
                 systemData.secondary.insanityPoints.current = (systemData.secondary.insanityPoints.initial || 0) + (systemData.secondary.insanityPoints.misc || 0);
-                //console.log(`insanityPoints.current = ${systemData.secondary.insanityPoints.current}`);
             }
             if (systemData.secondary.fatePoints) {
                 systemData.secondary.fatePoints.current = (systemData.secondary.fatePoints.initial || 0) + (systemData.secondary.fatePoints.misc || 0);
-                //console.log(`fatePoints.current = ${systemData.secondary.fatePoints.current}`);
             }
-        }        
+
+            // Initialize wounds.value if needed
+            if (systemData.secondary.wounds) {
+                // If value is undefined or hasn't been set, initialize it to max
+                if (systemData.secondary.wounds.value === undefined || systemData.secondary.wounds.value === null) {
+                    systemData.secondary.wounds.value = systemData.secondary.wounds.max;
+                }
+                // Clamp value between 0 and max
+                systemData.secondary.wounds.value = Math.max(0, Math.min(systemData.secondary.wounds.value, systemData.secondary.wounds.max));
+            }
+        }
+
         // Calculate available experience
         if (this.experience) {
                 this.experience.current = this.experience.total - this.experience.spent;
