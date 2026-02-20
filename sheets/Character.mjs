@@ -328,7 +328,7 @@ export class WHCharacterSheet extends ActorSheet {
         // Delete Special Rule
         html.find('.special-rule-delete').click(this._onDeleteSpecialRule.bind(this));
 
-        // Careen item updates to main tab
+        // Career item updates to main tab
         this.actor.items.forEach(item => {
             if (item.type === "career") {
                 Hooks.on('updateItem', (item, changes) => {
@@ -339,6 +339,9 @@ export class WHCharacterSheet extends ActorSheet {
             };
         });
 
+        // Roll Criticals
+        html.find(".roll-critical-hit").click(this._onRollCriticalHit.bind(this));
+
         // Initiative roll
         html.find('.roll-initiative-btn').click(this._onRollInitiative.bind(this));
 
@@ -347,6 +350,8 @@ export class WHCharacterSheet extends ActorSheet {
 
         // Spellcasting 
         html.find('.spell-cast').click(this._onSpellCast.bind(this));
+        html.find(".roll-arcane-miscast-btn").click(this._onRollArcaneMiscast.bind(this));
+        html.find(".roll-divine-miscast-btn").click(this._onRollDivineMiscast.bind(this));
 
         // Collapsavle sections
         html.find('.spell-section-header.collapsible').click(this._onToggleSpellSection.bind(this));
@@ -764,6 +769,134 @@ export class WHCharacterSheet extends ActorSheet {
         });
     }
 
+    /**
+     * Handle rolling a critical hit
+     */
+    async _rollCriticalHit(location, criticalValue) {
+        // Normalize location to match table naming convention
+        const tableName = `Critical Effects - ${location}`;
+
+        // Fetch the table from the system compendium
+        const pack = game.packs.get("fvtt-wfrp2e.RollableTables");
+        if (!pack) {
+            ui.notifications.error("Could not find the WFRP2E Rollable Tables compendium.");
+            return;
+        }
+
+        const index = await pack.getIndex();
+        const entry = index.find(e => e.name === tableName);
+        if (!entry) {
+            ui.notifications.error(`Critical hit table not found: "${tableName}"`);
+            return;
+        }
+
+        const table = await pack.getDocument(entry._id);
+
+        // Roll 1d100 and apply the Critical Value modifier
+        const roll = await new Roll("1d100").evaluate();
+        const criticalRow = WHCharacterSheet.getCriticalRow(roll.total, criticalValue);
+
+        let resultText = "No result found.";
+
+        // Forced roll for the draw, pinned to the row number for Foundry's display
+        const forcedRoll = new Roll(`${criticalRow}`);
+        forcedRoll._evaluated = true;
+        forcedRoll._total = criticalRow;
+
+        const draw = await table.draw({ roll: forcedRoll, displayChat: false });
+
+        const matchedResult = table.results.find(r => r.range[0] === criticalRow);
+        console.log("criticalRow:", criticalRow, "matchedResult:", matchedResult, "all ranges:", table.results.map(r => r.range));
+
+        if (matchedResult) resultText = matchedResult.text;
+
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: `<div class="wfrp-roll">
+                <div class="roll-header"><h3>Critical Hit!</h3></div>
+                <p><strong>Critical Location:</strong> ${location}</p>
+                <p><strong>Critical Value:</strong> ${criticalValue}</p>
+                <p><strong>Critical Roll:</strong> ${roll.total}</p>
+                <p><strong>Critical Result:</strong></p>
+                <p>${resultText}</p>
+            </div>`
+        });    
+    }
+    
+    /**
+     * Determine the critical hit result based on the d100 roll and critical value
+     * @param {*} d100Roll 
+     * @param {*} criticalValue 
+     */
+    static getCriticalRow(d100Roll, criticalValue) {
+        // Each entry is [minRoll, maxRoll, cv1, cv2, cv3, cv4, cv5, cv6, cv7, cv8, cv9, cv10]
+        const TABLE = [
+            [  1, 10, 5, 7, 9,10,10,10,10,10,10,10],
+            [ 11, 20, 5, 6, 8, 9,10,10,10,10,10,10],
+            [ 21, 30, 4, 6, 8, 9, 9,10,10,10,10,10],
+            [ 31, 40, 4, 5, 7, 8, 9, 9,10,10,10,10],
+            [ 41, 50, 3, 5, 7, 8, 8, 9, 9,10,10,10],
+            [ 51, 60, 3, 4, 6, 7, 8, 8, 9, 9,10,10],
+            [ 61, 70, 2, 4, 6, 7, 7, 8, 8, 9, 9,10],
+            [ 71, 80, 2, 3, 5, 6, 7, 7, 8, 8, 9, 9],
+            [ 81, 90, 1, 3, 5, 6, 6, 7, 7, 8, 8, 9],
+            [ 91, 100,1, 2, 4, 5, 6, 6, 7, 7, 8, 8],
+        ];
+
+        const cv = Math.clamped(criticalValue, 1, 10);
+        const row = TABLE.find(r => d100Roll >= r[0] && d100Roll <= r[1]);
+        if (!row) return 1; // Fallback
+
+        return row[cv + 1]; // +1 because index 0 and 1 are the range bounds
+    }
+
+    /**
+     * Handle rolling a critical hit
+     */
+    async _onRollCriticalHit() {
+        // Location names must match your table names exactly after "Critical Effects - "
+        const locationOptions = ["Head", "Arms", "Body", "Legs"]
+        .map(l => `<option value="${l}">${l}</option>`)
+        .join("");
+
+        const cvOptions = Array.from({length: 10}, (_, i) => 
+            `<option value="${i + 1}">${i + 1}</option>`
+        ).join("");
+
+        const content = `
+            <form>
+                <div class="form-group">
+                    <label>Hit Location</label>
+                    <select name="location">${locationOptions}</select>
+                </div>
+                <div class="form-group">
+                    <label>Critical Value</label>
+                    <select name="criticalValue">${cvOptions}</select>
+                </div>
+            </form>`;
+        
+        new Dialog({
+            title: "Critical Hit",
+            content,
+            buttons: {
+                roll: {
+                    icon: '<i class="fas fa-dice-d100"></i>',
+                    label: "Roll",
+                    callback: async (html) => {
+                        const location = html.find('[name="location"]').val();
+                        const criticalValue = parseInt(html.find('[name="criticalValue"]').val());
+                        await this._rollCriticalHit(location, criticalValue);
+                    }
+                },
+                cancel: {
+                    icon: '<i class="fas fa-times"></i>',
+                    label: "Cancel"
+                }
+            },
+            default: "roll"
+        }).render(true);
+    }
+
     /** 
      * Handle casting a spell
      * @param {Event} event   The originating click event
@@ -813,5 +946,107 @@ export class WHCharacterSheet extends ActorSheet {
             icon.classList.add('fa-chevron-down');
             await this.actor.setFlag('fvtt-wfrp2e', `spellSection-${section}`, false);
         }
+    }
+
+    // Curated table lists — names must match compendium exactly
+    static ARCANE_MISCAST_TABLES = [
+        "Tzeentch's Curse, Minor Expanded",
+        "Tzeentch's Curse, Major Expanded",
+        "Tzeentch's Curse, Catastrophic Expanded"
+    ];
+
+    static DIVINE_MISCAST_TABLES = [
+        "Wrath of the Gods",
+        "Vengeance of the Gods"
+    ];
+
+    async _onRollArcaneMiscast() {
+        await this._openMiscastDialog("Arcane Miscast", WHCharacterSheet.ARCANE_MISCAST_TABLES);
+    }
+
+    async _onRollDivineMiscast() {
+        await this._openMiscastDialog("Divine Miscast", WHCharacterSheet.DIVINE_MISCAST_TABLES);
+    }
+
+    async _openMiscastDialog(title, tableNames) {
+        const pack = game.packs.get("fvtt-wfrp2e.RollableTables");
+        if (!pack) {
+            ui.notifications.error("Could not find the WFRP2E Rollable Tables compendium.");
+            return;
+        }
+
+        const index = await pack.getIndex();
+        const sheet = this;
+
+        // Filter index to only the curated tables, preserving the order of tableNames
+        const tableOptions = tableNames
+            .map(name => {
+                const entry = index.find(e => e.name === name);
+                if (!entry) {
+                    console.warn(`WFRP2E | Miscast table not found in compendium: "${name}"`);
+                    return null;
+                }
+                return `<option value="${entry._id}">${entry.name}</option>`;
+            })
+            .filter(o => o !== null)
+            .join("");
+
+        if (!tableOptions) {
+            ui.notifications.error("No miscast tables found in the compendium.");
+            return;
+        }
+
+        const content = `
+            <form>
+                <div class="form-group">
+                    <label>Severity</label>
+                    <select name="tableId">${tableOptions}</select>
+                </div>
+            </form>`;
+
+        new Dialog({
+            title,
+            content,
+            buttons: {
+                roll: {
+                    icon: '<i class="fas fa-dice-d10"></i>',
+                    label: "Roll",
+                    callback: async (html) => {
+                        const tableId = html.find('[name="tableId"]').val();
+                        await sheet._drawFromTable(pack, tableId);
+                    }
+                },
+                cancel: {
+                    icon: '<i class="fas fa-times"></i>',
+                    label: "Cancel"
+                }
+            },
+            default: "roll"
+        }).render(true);
+    }
+
+    /** 
+     * Handle drawing from a rollable table by ID
+     * @param {string} packId   The ID of the compendium pack containing the table
+     * @param {string} tableId  The ID of the table to draw from
+     */
+    async _drawFromTable(pack, tableId) {
+        const table = await pack.getDocument(tableId);
+        if (!table) {
+            ui.notifications.error("Could not load the selected table.");
+            return;
+        }
+
+        const draw = await table.draw({ displayChat: false });
+        const resultText = draw.results.map(r => r.text).join("<br>") || "No result found.";
+
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: `<div class="wfrp-roll">
+                <div class="roll-header"><h3>${table.name}</h3></div>
+                <p><strong>Result:</strong></p>
+                <p>${resultText}</p>
+            </div>`
+        });
     }
 }

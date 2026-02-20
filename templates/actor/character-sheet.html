@@ -578,6 +578,10 @@
                             <span class="wound-max-value">{{system.secondary.wounds.max}}</span>
                         </div>
                     </div>
+
+                    <button type="button" class="roll-critical-hit" title="Roll on a Critical Hit table">
+                        <i class="fas fa-skull"></i> Critical Hit
+                    </button>
                 </div>
 
                 {{!-- Armour Value by Location --}}
@@ -797,6 +801,15 @@
 
         {{!-- Spells Tab --}}
         <div class="tab spells" data-group="primary" data-tab="spells">
+            <div class="miscast-buttons">
+                <button type="button" class="roll-arcane-miscast-btn">
+                    <i class="fas fa-hat-wizard"></i> Tzeentch's Curse
+                </button>
+                <button type="button" class="roll-divine-miscast-btn">
+                    <i class="fas fa-cross"></i> Wrath of the Gods
+                </button>
+            </div>
+            
             <h3>Spells</h3>
             {{!-- Petty Magic Section --}}
             <div class="spell-section">

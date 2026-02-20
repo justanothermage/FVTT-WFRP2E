@@ -62,23 +62,39 @@
 
     "packs": [
         {
+            "name": "beastiary",
+            "label": "WFRP2E Beastiary",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER"
+            }
+        },
+
+        {
             "name": "careers",
             "label": "WFRP2E Careers",
             "path": "packs/careers.db",
-            "type": "career",
+            "type": "Item",
             "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
+                "PLAYER": "OBSERVER"
+            }
+        },
+                {
+            "name": "equipment",
+            "label": "WFRP2E Equipment",
+            "path": "packs/equipment.db",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER"
             }
         },
         {
             "name": "Rollable Tables",
             "label": "WFRP2E Rollable Tables",
             "path": "packs/rollable-tables.db",
-            "type": "rollable-table",
+            "type": "RollTable",
             "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
+                "PLAYER": "OBSERVER"
             }
         }
     ],
@@ -86,7 +102,7 @@
         {
             "name": "WFRP2E Content",
             "sorting": "a",
-            "packs": ["careers", "Rollable-Tables"]
+            "packs": ["beastiary", "careers", "equipment", "Rollable Tables"]
         }
     ],
     "socket": false,
