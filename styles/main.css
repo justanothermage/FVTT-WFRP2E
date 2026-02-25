@@ -794,6 +794,14 @@
     border-color: #782e22;
 }
 
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+}
+.inactive-sort {
+    opacity: 0.3;
+}
+
 /* Rollable Elements */
 .wfrp2e .rollable-characteristic,
 .wfrp2e .rollable-skill {
@@ -1046,6 +1054,13 @@
     border-radius: 3px;
     font-size: 0.8em;
     margin-left: 0.25em;
+}
+
+
+.form-field-line-double {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5em;
 }
 
 /* Combat Tab Specific */
@@ -1624,7 +1639,7 @@
 }
 
 .spell-cast .miscast-warning {
-    background: #eeff00;
+    background: #00000000;
     color: white;
     padding: 10px;
     border-radius: 5px;

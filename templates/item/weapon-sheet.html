@@ -8,111 +8,190 @@
         </div>
     </header>
 
-    <div class="sheet-body">
-        <!-- Basic Information Section -->
-        <div class="form-group">
-            <h3>Basic Information</h3>
-            <div class="form-row">
-                <div class="form-field checkbox-field">
-                    <label>
-                        <input type="checkbox" name="system.isRanged" {{checked system.isRanged}}/>
-                        Ranged Weapon
-                    </label>
-                </div>
-                <div class="form-field">
-                    <label>Group</label>
-                    <select name="system.group">
-                        <option value="Ordinary" {{#if (eq system.group "Ordinary")}}selected{{/if}}>Ordinary</option>
-                        <option value="Cavalry" {{#if (eq system.group "Cavalry")}}selected{{/if}}>Cavalry</option>
-                        <option value="Crossbow" {{#if (eq system.group "Crossbow")}}selected{{/if}}>Crossbow</option>
-                        <option value="Engineer" {{#if (eq system.group "Engineer")}}selected{{/if}}>Engineer</option>
-                        <option value="Entangling" {{#if (eq system.group "Entangling")}}selected{{/if}}>Entangling</option>
-                        <option value="Flail" {{#if (eq system.group "Flail")}}selected{{/if}}>Flail</option>
-                        <option value="Gunpowder" {{#if (eq system.group "Gunpowder")}}selected{{/if}}>Gunpowder</option>
-                        <option value="Longbow" {{#if (eq system.group "Longbow")}}selected{{/if}}>Longbow</option>
-                        <option value="Parrying" {{#if (eq system.group "Parrying")}}selected{{/if}}>Parrying</option>
-                        <option value="Sling" {{#if (eq system.group "Sling")}}selected{{/if}}>Sling</option>
-                        <option value="Throwing" {{#if (eq system.group "Throwing")}}selected{{/if}}>Throwing</option>
-                        <option value="Two-handed" {{#if (eq system.group "Two-handed")}}selected{{/if}}>Two-handed</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label>Availability</label>
-                    <select name="system.availability">
-                        <option value="Abundant" {{#if (eq system.availability "Abundant")}}selected{{/if}}>Abundant</option>
-                        <option value="Plentiful" {{#if (eq system.availability "Plentiful")}}selected{{/if}}>Plentiful</option>
-                        <option value="Common" {{#if (eq system.availability "Common")}}selected{{/if}}>Common</option>
-                        <option value="Average" {{#if (eq system.availability "Average")}}selected{{/if}}>Average</option>
-                        <option value="Scarce" {{#if (eq system.availability "Scarce")}}selected{{/if}}>Scarce</option>
-                        <option value="Rare" {{#if (eq system.availability "Rare")}}selected{{/if}}>Rare</option>
-                        <option value="Very Rare" {{#if (eq system.availability "Very Rare")}}selected{{/if}}>Very Rare</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label>Craftsmanship</label>
-                    <select name="system.craftsmanship">
-                        <option value="Poor" {{#if (eq system.craftsmanship "Poor")}}selected{{/if}}>Poor</option>
-                        <option value="Common" {{#if (eq system.craftsmanship "Common")}}selected{{/if}}>Common</option>
-                        <option value="Good" {{#if (eq system.craftsmanship "Good")}}selected{{/if}}>Good</option>
-                        <option value="Best" {{#if (eq system.craftsmanship "Best")}}selected{{/if}}>Best</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-field">
-                    <label>Cost (gc)</label>
-                    <input type="number" name="system.cost" value="{{system.cost}}" min="0" data-dtype="Number"/>
-                </div>
-                <div class="form-field">
-                    <label>Encumbrance</label>
-                    <input type="number" name="system.encumbrance" value="{{system.encumbrance}}" min="0" data-dtype="Number"/>
-                </div>
-            </div>
-        </div>
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="details">Details</a>
+        <a class="item" data-tab="description">Description</a>
+    </nav>
 
-        <!-- Combat Statistics Section -->
-        <div class="form-group">
-            <h3>Combat Statistics</h3>
-            <div class="form-row">
-                <div class="form-field">
+    <section class="sheet-body">
+        <!-- Details Tab -->
+        <div class="tab" data-group="primary" data-tab="details">
+            <div class="form-group-vertical">
+                <div class="form-field-line-double">
+                    <div class="form-field-line">
+                        <label>Ranged Weapon</label>
+                        <input type="checkbox" name="system.isRanged" {{checked system.isRanged}}/>
+                    </div>
+                    <div class="form-field-line">
+                        <label>Group</label>
+                        <select name="system.group">
+                            <option value="Ordinary" {{#if (eq system.group "Ordinary")}}selected{{/if}}>Ordinary</option>
+                            <option value="Cavalry" {{#if (eq system.group "Cavalry")}}selected{{/if}}>Cavalry</option>
+                            <option value="Crossbow" {{#if (eq system.group "Crossbow")}}selected{{/if}}>Crossbow</option>
+                            <option value="Engineer" {{#if (eq system.group "Engineer")}}selected{{/if}}>Engineer</option>
+                            <option value="Entangling" {{#if (eq system.group "Entangling")}}selected{{/if}}>Entangling</option>
+                            <option value="Explosive" {{#if (eq system.group "Explosive")}}selected{{/if}}>Explosive</option>
+                            <option value="Fencing" {{#if (eq system.group "Fencing")}}selected{{/if}}>Fencing</option>
+                            <option value="Flail" {{#if (eq system.group "Flail")}}selected{{/if}}>Flail</option>
+                            <option value="Gunpowder" {{#if (eq system.group "Gunpowder")}}selected{{/if}}>Gunpowder</option>
+                            <option value="Longbow" {{#if (eq system.group "Longbow")}}selected{{/if}}>Longbow</option>
+                            <option value="Parrying" {{#if (eq system.group "Parrying")}}selected{{/if}}>Parrying</option>
+                            <option value="Sling" {{#if (eq system.group "Sling")}}selected{{/if}}>Sling</option>
+                            <option value="Throwing" {{#if (eq system.group "Throwing")}}selected{{/if}}>Throwing</option>
+                            <option value="Two-handed" {{#if (eq system.group "Two-handed")}}selected{{/if}}>Two-handed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-field-line-double">
+                    <div class="form-field-line">
+                        <label>Availability</label>
+                        <select name="system.availability">
+                            <option value="Abundant" {{#if (eq system.availability "Abundant")}}selected{{/if}}>Abundant</option>
+                            <option value="Plentiful" {{#if (eq system.availability "Plentiful")}}selected{{/if}}>Plentiful</option>
+                            <option value="Common" {{#if (eq system.availability "Common")}}selected{{/if}}>Common</option>
+                            <option value="Average" {{#if (eq system.availability "Average")}}selected{{/if}}>Average</option>
+                            <option value="Scarce" {{#if (eq system.availability "Scarce")}}selected{{/if}}>Scarce</option>
+                            <option value="Rare" {{#if (eq system.availability "Rare")}}selected{{/if}}>Rare</option>
+                            <option value="Very Rare" {{#if (eq system.availability "Very Rare")}}selected{{/if}}>Very Rare</option>
+                        </select>
+                    </div>
+                    <div class="form-field-line">
+                        <label>Craftsmanship</label>
+                        <select name="system.craftsmanship">
+                            <option value="Poor" {{#if (eq system.craftsmanship "Poor")}}selected{{/if}}>Poor</option>
+                            <option value="Common" {{#if (eq system.craftsmanship "Common")}}selected{{/if}}>Common</option>
+                            <option value="Good" {{#if (eq system.craftsmanship "Good")}}selected{{/if}}>Good</option>
+                            <option value="Best" {{#if (eq system.craftsmanship "Best")}}selected{{/if}}>Best</option>
+                        </select>
+                    </div>
+                </div>
+                    <div class="form-field-line-double">
+                    <div class="form-field-line">
+                        <label>Cost (gc)</label>
+                        <input type="number" name="system.cost" value="{{system.cost}}" min="0" data-dtype="Number"/>
+                    </div>
+                    <div class="form-field-line">
+                        <label>Encumbrance</label>
+                        <input type="number" name="system.encumbrance" value="{{system.encumbrance}}" min="0" data-dtype="Number"/>
+                    </div>
+                </div>
+
+                <div class="section-divider">
+                    <h3>Combat Statistics</h3>
+                </div>
+
+                <div class="form-field-line">
                     <label>Damage</label>
-                    <input type="number" name="system.damage" value="{{system.damage}}" min="0" data-dtype="Number"/>
+                    <div class="damage-input-group">
+                        <select name="system.damageBase">
+                            <option value="none" {{#if (eq system.damageBase "none")}}selected{{/if}}>None</option>
+                            <option value="flat" {{#if (eq system.damageBase "flat")}}selected{{/if}}>Flat</option>
+                            <option value="sb" {{#if (eq system.damageBase "sb")}}selected{{/if}}>SB</option>
+                        </select>
+                        <input type="number" name="system.damageModifier" value="{{system.damageModifier}}" data-dtype="Number"
+                            class="damage-modifier {{#if (eq system.damageBase "none")}}hidden{{/if}}"
+                            placeholder="+0"/>
+                    </div>
                 </div>
-                <div class="form-field">
+
+                <div class="form-field-line">
                     <label>Range (yards)</label>
-                    <input type="number" name="system.range" value="{{system.range}}" min="0" data-dtype="Number" placeholder="0 for melee"/>
+                    <input type="text" name="system.range" value="{{system.range}}" placeholder=""/>
                 </div>
-                <div class="form-field">
+
+                <div class="form-field-line">
                     <label>Reload</label>
                     <input type="text" name="system.reload" value="{{system.reload}}" placeholder=""/>
                 </div>
+
+                <div class="section-divider">
+                    <h3>Weapon Qualities</h3>
+                </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Armour Piercing</label>
+                            <input type="checkbox" name="system.hasArmourPiercing" {{checked system.hasArmourPiercing}}/>
+                        </div>
+
+                        <div class="form-field-line">
+                            <label>Balanced</label>
+                            <input type="checkbox" name="system.hasBalanced" {{checked system.hasBalanced}}/>
+                        </div>
+                    </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Defensive</label>
+                            <input type="checkbox" name="system.hasDefensive" {{checked system.hasDefensive}}/>
+                        </div>
+
+                        <div class="form-field-line">
+                            <label>Experimental</label>
+                            <input type="checkbox" name="system.hasExperimental" {{checked system.hasExperimental}}/>
+                        </div>
+                    </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Fast</label>
+                            <input type="checkbox" name="system.hasFast" {{checked system.hasFast}}/>
+                        </div>
+
+                        <div class="form-field-line">
+                            <label>Impact</label>
+                            <input type="checkbox" name="system.hasImpact" {{checked system.hasImpact}}/>
+                        </div>
+                    </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Precise</label>
+                            <input type="checkbox" name="system.hasPrecise" {{checked system.hasPrecise}}/>
+                        </div>
+
+                        <div class="form-field-line">
+                            <label>Pummelling</label>
+                            <input type="checkbox" name="system.hasPummelling" {{checked system.hasPummelling}}/>
+                        </div>
+                    </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Shrapnel</label>
+                            <input type="checkbox" name="system.hasShrapnel" {{checked system.hasShrapnel}}/>
+                        </div>
+
+                        <div class="form-field-line">
+                            <label>Slow</label>
+                            <input type="checkbox" name="system.hasSlow" {{checked system.hasSlow}}/>
+                        </div>
+                    </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Snare</label>
+                            <input type="checkbox" name="system.hasSnare" {{checked system.hasSnare}}/>
+                        </div>
+
+                        <div class="form-field-line">
+                            <label>Special</label>
+                            <input type="checkbox" name="system.hasSpecial" {{checked system.hasSpecial}}/>
+                        </div>
+                    </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Tiring</label>
+                            <input type="checkbox" name="system.hasTiring" {{checked system.hasTiring}}/>
+                        </div>
+
+                        <div class="form-field-line">
+                            <label>Unreliable</label>
+                            <input type="checkbox" name="system.hasUnreliable" {{checked system.hasUnreliable}}/>
+                        </div>
+                    </div>
             </div>
         </div>
 
-        <!-- Weapon Properties Section -->
-        <div class="form-group">
-            <h3>Weapon Properties</h3>
-            <div class="form-row">
-                <div class="form-field checkbox-field">
-                    <label>
-                        <input type="checkbox" name="system.hasImpact" {{checked system.hasImpact}}/>
-                        Impact
-                    </label>
-                </div>
-                <div class="form-field checkbox-field">
-                    <label>
-                        <input type="checkbox" name="system.hasDefensive" {{checked system.hasDefensive}}/>
-                        Defensive
-                    </label>
-                </div>
-            </div>
-            <div class="form-field">
-                <label>Qualities</label>
-                <textarea name="system.qualities" rows="1" placeholder="">{{system.qualities}}</textarea>
+        <!-- Description Tab -->
+        <div class="tab" data-group="primary" data-tab="description">
+            <div class="editor-container">
+                {{editor enrichedDescription target="system.description" button=true owner=owner editable=editable}}
             </div>
         </div>
-
-        <!-- Description Section -->
-        <div class="form-group">
-            <h3>Description & Notes</h3>
-            <textarea name="system.description" rows="2" placeholder="Add notes and description about this weapon...">{{system.description}}</textarea>
+    </section>
+</form>

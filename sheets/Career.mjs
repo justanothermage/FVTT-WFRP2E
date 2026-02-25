@@ -3,10 +3,10 @@ export class WHCareerSheet extends ItemSheet {
     /** @override */
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            classes: ["fvtt-wfrp2e", "sheet", "item", "career"],
+            classes: ["wfrp2e", "sheet", "item", "career"],
             width: 600,
             height: 700,
-            tabs: []
+            tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "main" }]
         });
     }
 

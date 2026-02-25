@@ -14,6 +14,11 @@ export class WHCharacterSheet extends ActorSheet {
         });
     }
 
+    constructor(...args) {
+        super(...args);
+        this._sortState = {}; // { listId: { field: "name", direction: 1 } }
+    }
+
     /** @override */
     get template() {
         return "systems/fvtt-wfrp2e/templates/actor/character-sheet.html";
@@ -43,10 +48,48 @@ export class WHCharacterSheet extends ActorSheet {
         context.talents = this.actor.items.filter(i => i.type === "talent");
         context.mutations = this.actor.items.filter(i => i.type === "mutation");
         context.insanities = this.actor.items.filter(i => i.type === "insanity");
-        context.weapons = this.actor.items.filter(i => i.type === "weapon");
-        context.armours = this.actor.items.filter(i => i.type === "armour");
-        context.spells = this.actor.items.filter(i => i.type === "spell");
+        context.weapons = this._sortItems(
+            this.actor.items.filter(i => i.type === "weapon"),
+            "weapons"
+        );
+        context.armours = this._sortItems(
+            this.actor.items.filter(i => i.type === "armour"),
+            "armours"
+        );
+        context.spells = this._sortItems(
+            this.actor.items.filter(i => i.type === "spell"),
+            "spells"
+        );
+
+        context.sortState = this._sortState;
         
+        // Show weapon qualities 
+        const qualityMap = {
+            hasArmourPiercing: "Armour Piercing",
+            hasBalanced: "Balanced",
+            hasDefensive: "Defensive",
+            hasExperimental: "Experimental",
+            hasFast: "Fast",
+            hasImpact: "Impact",
+            hasPrecise: "Precise",
+            hasPummelling: "Pummelling",
+            hasShrapnel: "Shrapnel",
+            hasSlow: "Slow",
+            hasSnare: "Snare",
+            hasSpecial: "Special",
+            hasTiring: "Tiring",
+            hasUnreliable: "Unreliable"
+        };
+
+        context.weapons = context.weapons.map(weapon => {
+            const activeQualities = Object.entries(qualityMap)
+                .filter(([key]) => weapon.system[key])
+                .map(([, label]) => label)
+                .join(", ");
+            weapon.displayQualities = activeQualities || "—";
+            return weapon;
+        });
+
         // Debugging logs; adding these made items show up correctly to actor sheet
         console.log("Talents:", context.talents);
         console.log("Mutations:", context.mutations);
@@ -356,6 +399,9 @@ export class WHCharacterSheet extends ActorSheet {
         // Collapsavle sections
         html.find('.spell-section-header.collapsible').click(this._onToggleSpellSection.bind(this));
 
+        // Sorting items in a list 
+        html.find('.sortable-header').click(this._onSortHeader.bind(this));
+
         // Initialize collapsed states from flags 
         html.find('.spell-section-header.collapsible').each((i, header) => {
             const section = header.dataset.section;
@@ -373,6 +419,52 @@ export class WHCharacterSheet extends ActorSheet {
                 icon.classList.add('fa-chevron-down');
             }
         });
+    }
+
+    /**
+     * Handle sorting items in a list
+     * @param {*} items 
+     * @param {*} listId 
+     * @returns 
+     */
+    _sortItems(items, listId) {
+        const sort = this._sortState[listId];
+        if (!sort) return items;
+
+        return [...items].sort((a, b) => {
+            let valA = foundry.utils.getProperty(a, sort.field) ?? "";
+            let valB = foundry.utils.getProperty(b, sort.field) ?? "";
+
+            if (typeof valA === "string") valA = valA.toLowerCase();
+            if (typeof valB === "string") valB = valB.toLowerCase();
+
+            if (valA < valB) return -1 * sort.direction;
+            if (valA > valB) return 1 * sort.direction;
+            return 0;
+        });
+    }
+
+    /**
+     * Handle clicking on a sortable header to sort items in a list
+     * @param {*} event 
+     * @returns 
+     */
+    _onSortHeader(event) {
+        event.preventDefault();
+        const header = event.currentTarget;
+        const field = header.dataset.sortField;
+        const listId = header.closest('ol, ul, .items-list').dataset.sortId;
+
+        if (!listId || !field) return;
+
+        const current = this._sortState[listId];
+        if (current?.field === field) {
+            this._sortState[listId].direction *= -1; // flip direction
+        } else {
+            this._sortState[listId] = { field, direction: 1 };
+        }
+
+        this.render(false);
     }
 
     /**

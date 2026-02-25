@@ -79,10 +79,19 @@
                 "PLAYER": "OBSERVER"
             }
         },
-                {
+        {
             "name": "equipment",
             "label": "WFRP2E Equipment",
             "path": "packs/equipment.db",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER"
+            }
+        },
+        {
+            "name": "talents",
+            "label": "WFRP2E Talents",
+            "path": "packs/talents.db",
             "type": "Item",
             "ownership": {
                 "PLAYER": "OBSERVER"
@@ -102,7 +111,7 @@
         {
             "name": "WFRP2E Content",
             "sorting": "a",
-            "packs": ["beastiary", "careers", "equipment", "Rollable Tables"]
+            "packs": ["beastiary", "careers", "equipment", "talents", "Rollable Tables"]
         }
     ],
     "socket": false,

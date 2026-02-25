@@ -224,7 +224,7 @@
                         <tr class="current-row">
                             <td class="row-label">{{localize "WFRP2E.RowCurrent"}}</td>
                             <td class="current-value">{{system.secondary.attacks.current}}</td>
-                            <td class="current-value">{{system.secondary.wounds.current}}</td>
+                            <td class="current-value">{{system.secondary.wounds.max}}</td>
                             <td class="current-value">{{system.secondary.strengthBonus.value}}</td>
                             <td class="current-value">{{system.secondary.toughnessBonus.value}}</td>
                             <td class="current-value">{{system.secondary.movement.current}}</td>
@@ -681,7 +681,7 @@
                     </div>
 
                     <button type="button" class="roll-initiative-btn" title="Roll Initiative (1d10 + Agility)">
-                        <i class="fas fa-dice-d10"></i> Roll Initiative
+                        <i class="fas fa-dice-d20"></i> Roll Initiative
                     </button>
                 </div>
 
@@ -690,12 +690,44 @@
             <h3>Weapons</h3>
             <div class="tab combat" data-group="primary" data-tab="combat">
                 <h4>Melee Weapons</h4>
-                <ol class="items-list combat-list">
+                <ol class="items-list combat-list" data-sort-id="weapons">
                     <li class="item items-header">
-                        <div class="item-name">Weapon</div>
-                        <div class="item-skill">Skill</div>
-                        <div class="item-damage">Damage</div>
-                        <div class="item-qualities">Qualities</div>
+                        <div class="item-name sortable-header" data-sort-field="name">
+                            Weapon
+                            {{#if (eq sortState.weapons.field "name")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-skill sortable-header" data-sort-field="system.group">
+                            Skill
+                            {{#if (eq sortState.weapons.field "system.group")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-range sortable-header" data-sort-field="range">
+                            Range
+                            {{#if (eq sortState.weapons.field "range")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-damage sortable-header" data-sort-field="damage">
+                            Damage
+                            {{#if (eq sortState.weapons.field "damage")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-reload sortable-header" data-sort-field="reload">
+                            Reload
+                            {{#if (eq sortState.weapons.field "reload")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-qualities sortable-header" data-sort-field="qualities">
+                            Qualities
+                            {{#if (eq sortState.weapons.field "qualities")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
                         <div class="item-controls"></div>
                     </li>
 
@@ -707,35 +739,66 @@
                             <h4>{{weapon.name}}</h4>
                         </div>
                         <div class="item-skill">{{weapon.system.group}}</div>
+                        <div class="item-range">Melee</div>
                         <div class="item-damage">
-                            SB{{#if weapon.system.damage}}+{{weapon.system.damage}}{{/if}}
-                            {{#if weapon.system.hasImpact}}<span class="quality-badge">Impact</span>{{/if}}
+                            {{#if (eq weapon.system.damageBase "none")}}
+                                None
+                            {{else if (eq weapon.system.damageBase "sb")}}
+                                SB{{#if weapon.system.damageModifier}}+{{weapon.system.damageModifier}}{{/if}}
+                            {{else}}
+                                {{weapon.system.damageModifier}}
+                            {{/if}}
                         </div>
-                        <div class="item-qualities">
-                            {{weapon.system.qualities}}
-                            {{#if weapon.system.hasDefensive}}<span class="quality-badge">Defensive</span>{{/if}}
-                        </div>
+                        <div class="item-reload">Melee</div>
+                        <div class="item-qualities">{{weapon.displayQualities}}</div>
                         <div class="item-controls">
-                            <a class="Iitem-control weapon-attack" data-item-id="{{weapon.id}}" title="Attack with {{weapon.name}}">
+                            <a class="item-control weapon-attack" data-item-id="{{weapon.id}}" title="Attack with {{weapon.name}}">
                                 <i class="fas fa-dice-d20"></i>
-                            </a>
-                            <a class="item-control item-edit" data-item-id="{{weapon.id}}" title="Edit Weapon">
-                                <i class="fas fa-edit"></i>
                             </a>
                         </div>
                     </li>
                     {{/unless}}
-                    {{/each}}                
+                    {{/each}}
                 </ol>
                 <h4>Ranged Weapons</h4>
-                <ol class="items-list combat-list">
+                <ol class="items-list combat-list" data-sort-id="weapons">
                     <li class="item items-header">
-                        <div class="item-name">Weapon</div>
-                        <div class="item-skill">Skill</div>
-                        <div class="item-range">Range</div>
-                        <div class="item-damage">Damage</div>
-                        <div class="item-reload">Reload</div>
-                        <div class="item-qualities">Qualities</div>
+                        <div class="item-name sortable-header" data-sort-field="name">
+                            Weapon
+                            {{#if (eq sortState.weapons.field "name")}}
+                            {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-skill sortable-header" data-sort-field="skill">
+                            Skill
+                            {{#if (eq sortState.weapons.field "skill")}}
+                            {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-range sortable-header" data-sort-field="range">
+                            Range
+                            {{#if (eq sortState.weapons.field "range")}}
+                            {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-damage sortable-header" data-sort-field="damage">
+                            Damage
+                            {{#if (eq sortState.weapons.field "damage")}}
+                            {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-reload sortable-header" data-sort-field="reload">
+                            Reload 
+                            {{#if (eq sortState.weapons.field "reload")}}
+                            {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-qualities sortable-header" data-sort-field="qualities">
+                            Qualities
+                            {{#if (eq sortState.weapons.field "qualities")}}
+                            {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
                         <div class="item-controls"></div>
                     </li>
 
@@ -748,15 +811,20 @@
                         </div>
                         <div class="item-skill">{{weapon.system.group}}</div>
                         <div class="item-range">{{weapon.system.range}} yds</div>
-                        <div class="item-damage">{{weapon.system.damage}}</div>
+                        <div class="item-damage">
+                            {{#if (eq weapon.system.damageBase "none")}}
+                                None
+                            {{else if (eq weapon.system.damageBase "sb")}}
+                                SB{{#if weapon.system.damageModifier}}+{{weapon.system.damageModifier}}{{/if}}
+                            {{else}}
+                                {{weapon.system.damageModifier}}
+                            {{/if}}
+                        </div>
                         <div class="item-reload">{{weapon.system.reload}}</div>
-                        <div class="item-qualities">{{weapon.system.qualities}}</div>
+                        <div class="item-qualities">{{weapon.displayQualities}}</div>
                         <div class="item-controls">
                             <a class="item-control weapon-attack" data-item-id="{{weapon.id}}" title="Attack with {{weapon.name}}">
                                 <i class="fas fa-dice-d20"></i>
-                            </a>
-                            <a class="item-control item-edit" data-item-id="{{weapon.id}}" title="Edit Weapon">
-                                <i class="fas fa-edit"></i>
                             </a>
                         </div>
                     </li>
@@ -768,7 +836,6 @@
             <h3>Armour</h3>
             <ol class="items-list combat-list armour-list">
                 <li class="item items-header">
-                    <div class="item-equipped">Equipped</div>
                     <div class="item-name">Armour</div>
                     <div class="item-ap">AP</div>
                     <div class="item-locations-compact">Coverage</div>
@@ -777,9 +844,6 @@
 
                 {{#each armour as |armour|}}
                 <li class="item {{#if armour.isEquipped}}equipped{{/if}}" data-item-id="{{armour.id}}">
-                    <div class="item-equipped">
-                        <input type="checkbox" class="armour-equipped-toggle" data-item-id="{{armour.id}}" {{checked armour.isEquipped}} title="Toggle Equipped"/>
-                    </div>
                     <div class="item-name">{{armour.name}}</div>
                     <div class="item-ap">{{armour.system.armourPoints}}</div>
                     <div class="item-locations-compact">
@@ -817,14 +881,39 @@
                     <i class="fas fa-chevron-down toggle-icon"></i>
                     Petty Magic
                 </h4>
-                <ol class="spell-list collapsible-content" data-section="petty">
+                <ol class="spell-list collapsible-content" data-section="petty" data-sort-id="spells">
                     <li class="item items-header">
                         <div class="item-img-cell"></div>
-                        <div class="item-name">Spell</div>
-                        <div class="item-cn">Cast Num.</div>
-                        <div class="item-casting-time">Casting Time</div>
-                        <div class="item-range">Range</div>
-                        <div class="item-duration">Duration</div>
+                        <div class="item-name sortable-header" data-sort-field="name">
+                            Spell
+                            {{#if (eq sortState.spells.field "name")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-cn sortable-header" data-sort-field="castNumber">
+                            Cast Num.
+                            {{#if (eq sortState.spells.field "castNumber")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-casting-time sortable-header" data-sort-field="castTime">
+                            Casting Time
+                            {{#if (eq sortState.spells.field "castTime")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-range sortable-header" data-sort-field="range">
+                            Range
+                            {{#if (eq sortState.spells.field "range")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-duration sortable-header" data-sort-field="duration">
+                            Duration
+                            {{#if (eq sortState.spells.field "duration")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
                         <div class="item-controls"></div>
                     </li>
 
@@ -866,14 +955,39 @@
                     <i class="fas fa-chevron-down toggle-icon"></i>
                     Lesser Magic
                 </h4>
-                <ol class="spell-list collapsible-content" data-section="lesser">
+                <ol class="spell-list collapsible-content" data-section="lesser" data-sort-id="spells">
                     <li class="item items-header">
                         <div class="item-img-cell"></div>
-                        <div class="item-name">Spell</div>
-                        <div class="item-cn">Cast Num.</div>
-                        <div class="item-casting-time">Casting Time</div>
-                        <div class="item-range">Range</div>
-                        <div class="item-duration">Duration</div>
+                        <div class="item-name sortable-header" data-sort-field="name">
+                            Spell
+                            {{#if (eq sortState.spells.field "name")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-cn sortable-header" data-sort-field="castNumber">
+                            Cast Num.
+                            {{#if (eq sortState.spells.field "castNumber")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-casting-time sortable-header" data-sort-field="castTime">
+                            Casting Time
+                            {{#if (eq sortState.spells.field "castTime")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-range sortable-header" data-sort-field="range">
+                            Range
+                            {{#if (eq sortState.spells.field "range")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-duration sortable-header" data-sort-field="duration">
+                            Duration
+                            {{#if (eq sortState.spells.field "duration")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
                         <div class="item-controls"></div>
                     </li>
 
@@ -915,14 +1029,39 @@
                     <i class="fas fa-chevron-down toggle-icon"></i>
                     Lore Magic
                 </h4>
-                <ol class="spell-list collapsible-content" data-section="lore">
+                <ol class="spell-list collapsible-content" data-section="lore" data-sort-id="spells">
                     <li class="item items-header">
                         <div class="item-img-cell"></div>
-                        <div class="item-name">Spell</div>
-                        <div class="item-cn">Cast Num.</div>
-                        <div class="item-casting-time">Casting Time</div>
-                        <div class="item-range">Range</div>
-                        <div class="item-duration">Duration</div>
+                        <div class="item-name" data-sort-field="name">
+                            Spell
+                            {{#if (eq sortState.spells.field "name")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-cn" data-sort-field="castNumber">
+                            Cast Num.
+                            {{#if (eq sortState.spells.field "castNumber")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-casting-time" data-sort-field="castTime">
+                            Casting Time
+                            {{#if (eq sortState.spells.field "castTime")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-range" data-sort-field="range">
+                            Range
+                            {{#if (eq sortState.spells.field "range")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-duration" data-sort-field="duration">
+                            Duration
+                            {{#if (eq sortState.spells.field "duration")}}
+                                {{#if (eq sortState.spells.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
                         <div class="item-controls"></div>
                     </li>
                     
@@ -981,18 +1120,40 @@
              <div class="items-section">    
                 <h3 class="items-header">
                     <span>Weapons</span>
-                    <a class="item-control item-create" data-type="weapon" title="Create Weapon">
-                        <i class="fas fa-plus"></i>
-                    </a>
                 </h3>
 
-                <ol class="items-list">
+                <ol class="items-list" data-sort-id="weapons">
                     <li class="item items-header">
-                        <div class="item-name">Name</div>
-                        <div class="item-group">Group</div>
-                        <div class="item-damage">Damage</div>
-                        <div class="item-range">Range</div>
-                        <div class="item-enc">Enc</div>
+                        <div class="item-name" data-sort-field="name">
+                            Name
+                            {{#if (eq sortState.weapons.field "name")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-group" data-sort-field="group">
+                            Group
+                            {{#if (eq sortState.weapons.field "group")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-damage" data-sort-field="damage">
+                            Damage
+                            {{#if (eq sortState.weapons.field "damage")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-range" data-sort-field="range">
+                            Range
+                            {{#if (eq sortState.weapons.field "range")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-enc" data-sort-field="encumberance">
+                            Enc
+                            {{#if (eq sortState.weapons.field "encumberance")}}
+                                {{#if (eq sortState.weapons.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
                         <div class="item-controls"></div>
                     </li>
 
@@ -1000,9 +1161,17 @@
                     <li class="item" data-item-id="{{weapon.id}}">
                         <div class="item-name">{{weapon.name}}</div>
                         <div class="item-group">{{weapon.system.group}}</div>
-                        <div class="item-damage">{{weapon.system.damage}}</div>
-                        <div class="item-range">{{#if weapon.system.range}}{{weapon.system.range}} yds{{else}}Melee{{/if}}</div>
-                        <div class="item-enc">{{weapon.system.encumberance}}</div>
+                        <div class="item-damage">
+                            {{#if (eq weapon.system.damageBase "none")}}
+                                None
+                            {{else if (eq weapon.system.damageBase "sb")}}
+                                SB{{#if weapon.system.damageModifier}}+{{weapon.system.damageModifier}}{{/if}}
+                            {{else}}
+                                {{weapon.system.damageModifier}}
+                            {{/if}}
+                        </div>
+                        <div class="item-range">{{weapon.system.range}}</div>
+                        <div class="item-enc">{{weapon.system.encumbrance}}</div>
                         <div class="item-controls">
                             <a class="item-control item-edit" data-item-id="{{weapon.id}}" title="Edit Weapon">
                                 <i class="fas fa-edit"></i>
@@ -1019,37 +1188,36 @@
             <div class="items-section">
                 <h3 class="items-header">
                     <span>Armour</span>
-                    <a class="item-control item-create" data-type="armour" title="Create Armour">
-                        <i class="fas fa-plus"></i>
-                    </a>
                 </h3>
 
-                <ol class="items-list">
+                <ol class="items-list" data-sort-id="armour">
                     <li class="item items-header">
+                        <div class="item-name" data-sort-field="name">
+                            Name
+                            {{#if (eq sortState.armour.field "name")}}
+                                {{#if (eq sortState.armour.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
+                        <div class="item-enc" data-sort-field="enc">
+                            Enc
+                            {{#if (eq sortState.armour.field "enc")}}
+                                {{#if (eq sortState.armour.direction 1)}}<i class="fas fa-sort-up"></i>{{else}}<i class="fas fa-sort-down"></i>{{/if}}
+                            {{else}}<i class="fas fa-sort inactive-sort"></i>{{/if}}
+                        </div>
                         <div class="item-equipped">Equipped</div>
-                        <div class="item-name">Name</div>
-                        <div class="item-locations">Locations</div>
-                        <div class="item-enc">Enc</div>
                         <div class="item-controls"></div>
                     </li>
 
                     {{#each armour as |armour|}}
                     <li class="item {{#if armour.isEquipped}}equipped{{/if}}" data-item-id="{{armour.id}}">
-                        <div class="item-equipped">
-                            <input type="checkbox" class="armour-equipped-toggle" data-item-id="{{armour.id}}" {{checked armour.isEquipped}} title="Toggle Equipped"/>
-                        </div>
                         <div class="item-name">
                             <img src="{{armour.img}}" title="{{armour.name}}" width="24" height="24"/>
                             <h4>{{armour.name}}</h4>
                         </div>
-                        <div class="item-locations">
-                            {{#if armour.system.head}}<span class="location-badge">Head</span>{{/if}}
-                            {{#if armour.system.armLeft}}<span class="location-badge">Left Arm</span>{{/if}}
-                            {{#if armour.system.armRight}}<span class="location-badge">Right Arm</span>{{/if}}
-                            {{#if armour.system.legLeft}}<span class="location-badge">Left Leg</span>{{/if}}
-                            {{#if armour.system.legRight}}<span class="location-badge">Right Leg</span>{{/if}}
-                            {{#if armour.system.body}}<span class="location-badge">Body</span>{{/if}}
                         <div class="item-enc">{{armour.system.encumbrance}}</div>
+                        <div class="item-equipped">
+                            <input type="checkbox" class="armour-equipped-toggle" data-item-id="{{armour.id}}" {{checked armour.isEquipped}} title="Toggle Equipped"/>
+                        </div>
                         <div class="item-controls">
                             <a class="item-control item-edit" data-item-id="{{armour.id}}" title="Edit Armour">
                                 <i class="fas fa-edit"></i>

@@ -4,9 +4,9 @@ export class WHWeaponSheet extends ItemSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["wfrp2e", "sheet", "item", "weapon"],
-            width: 500,
+            width: 600,
             height: 600,
-            tabs: []
+            tabs: [{ navSelector: ".tabs", contentSelector: ".sheet-body", initial: "details" }]
         });
     }
 
@@ -19,6 +19,12 @@ export class WHWeaponSheet extends ItemSheet {
     async getData(options) {
         const context = await super.getData(options);
         context.system = this.item.system;
+
+        if (context.system.damageBase === undefined) {
+            context.system.damageBase = "flat";
+            context.system.damageModifier = context.system.damage ?? 0;
+        }
+
         return context;
     }
 
@@ -26,5 +32,14 @@ export class WHWeaponSheet extends ItemSheet {
     activateListeners(html) {
         super.activateListeners(html);
         if (!this.isEditable) return;
+
+        html.find('select[name="system.damageBase"]').on("change", (event) => {
+            const modifier = html.find('input[name="system.damageModifier"]');
+            if (event.target.value === "none") {
+                modifier.addClass("hidden");
+            } else {
+                modifier.removeClass("hidden");
+            }
+        });
     }
 }
