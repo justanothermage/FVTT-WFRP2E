@@ -17,59 +17,88 @@
         <!-- Details Tab -->
         <div class="tab" data-group="primary" data-tab="details">
             <div class="form-group-vertical">
-                <div class="form-field-line">
-                    <label>Armour Type</label>
-                    <input type="text" name="system.armourType" value="{{system.armourType}}" placeholder="e.g. Leather, Chainmail, Plate"/>
+                <div class="form-field-line-double">
+                    <div class="form-field-line">
+                        <label>Armour Type</label>
+                        <select name="system.armourType">
+                            <option value="">Select Type</option>
+                            <option value="Light" {{#if (eq system.armourType "Light")}}selected{{/if}}>Light</option>
+                            <option value="Medium" {{#if (eq system.armourType "Medium")}}selected{{/if}}>Medium</option>
+                            <option value="Heavy" {{#if (eq system.armourType "Heavy")}}selected{{/if}}>Heavy</option>
+                        </select>
+                    </div>
+                    <div class="form-field-line">
+                        <label>Availability</label>
+                            <select name="system.availability">
+                                <option value="Abundant" {{#if (eq system.availability "Abundant")}}selected{{/if}}>Abundant</option>
+                                <option value="Plentiful" {{#if (eq system.availability "Plentiful")}}selected{{/if}}>Plentiful</option>
+                                <option value="Common" {{#if (eq system.availability "Common")}}selected{{/if}}>Common</option>
+                                <option value="Average" {{#if (eq system.availability "Average")}}selected{{/if}}>Average</option>
+                                <option value="Scarce" {{#if (eq system.availability "Scarce")}}selected{{/if}}>Scarce</option>
+                                <option value="Rare" {{#if (eq system.availability "Rare")}}selected{{/if}}>Rare</option>
+                                <option value="Very Rare" {{#if (eq system.availability "Very Rare")}}selected{{/if}}>Very Rare</option>
+                            </select>
+                    </div>
                 </div>
-
-                <div class="form-field-line">
-                    <label>Availability</label>
-                    <input type="text" name="system.availability" value="{{system.availability}}" placeholder="e.g., Common, Scarce, Rare"/>
+                <div class="form-field-line-double">
+                    <div class="form-field-line">
+                        <label>Craftsmanship</label>
+                            <select name="system.craftsmanship">
+                                <option value="Poor" {{#if (eq system.craftsmanship "Poor")}}selected{{/if}}>Poor</option>
+                                <option value="Common" {{#if (eq system.craftsmanship "Common")}}selected{{/if}}>Common</option>
+                                <option value="Good" {{#if (eq system.craftsmanship "Good")}}selected{{/if}}>Good</option>
+                                <option value="Best" {{#if (eq system.craftsmanship "Best")}}selected{{/if}}>Best</option>
+                            </select>
+                    </div>
+                    <div class="form-field-line">
+                        <label>Cost (gc)</label>
+                        <input type="number" name="system.cost" value="{{system.cost}}" min="0" data-dtype="Number"/>
+                    </div>
                 </div>
-
-                <div class="form-field-line">
-                    <label>Cost (gc)</label>
-                    <input type="number" name="system.cost" value="{{system.cost}}" min="0" data-dtype="Number"/>
-                </div>
-
-                <div class="form-field-line">
-                    <label>Encumbrance</label>
-                    <input type="number" name="system.encumbrance" value="{{system.encumbrance}}" min="0" data-dtype="Number"/>
+                <div class="form-field-line-double">
+                    <div class="form-field-line">
+                        <label>Encumbrance</label>
+                        <input type="number" name="system.encumbrance" value="{{system.encumbrance}}" min="0" data-dtype="Number"/>
+                    </div>
                 </div>
 
                 <div class="section-divider">
                     <h3>Armour Protection by Location</h3>
                 </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Head</label>
+                            <input type="number" name="system.head" value="{{system.head}}" min="0" data-dtype="Number"/>
+                        </div>
+                    </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Left Arm</label>
+                            <input type="number" name="system.armLeft" value="{{system.armLeft}}" min="0" data-dtype="Number"/>
+                        </div>
 
-                <div class="form-field-line">
-                    <label>Head</label>
-                    <input type="number" name="system.head" value="{{system.head}}" min="0" data-dtype="Number"/>
-                </div>
+                        <div class="form-field-line">
+                            <label>Right Arm</label>
+                            <input type="number" name="system.armRight" value="{{system.armRight}}" min="0" data-dtype="Number"/>
+                        </div>
+                    </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Body</label>
+                            <input type="number" name="system.body" value="{{system.body}}" min="0" data-dtype="Number"/>
+                        </div>
+                    </div>
+                    <div class="form-field-line-double">
+                        <div class="form-field-line">
+                            <label>Left Leg</label>
+                            <input type="number" name="system.legLeft" value="{{system.legLeft}}" min="0" data-dtype="Number"/>
+                        </div>
 
-                <div class="form-field-line">
-                    <label>Left Arm</label>
-                    <input type="number" name="system.armLeft" value="{{system.armLeft}}" min="0" data-dtype="Number"/>
-                </div>
-
-                <div class="form-field-line">
-                    <label>Right Arm</label>
-                    <input type="number" name="system.armRight" value="{{system.armRight}}" min="0" data-dtype="Number"/>
-                </div>
-
-                <div class="form-field-line">
-                    <label>Body</label>
-                    <input type="number" name="system.body" value="{{system.body}}" min="0" data-dtype="Number"/>
-                </div>
-
-                <div class="form-field-line">
-                    <label>Left Leg</label>
-                    <input type="number" name="system.legLeft" value="{{system.legLeft}}" min="0" data-dtype="Number"/>
-                </div>
-
-                <div class="form-field-line">
-                    <label>Right Leg</label>
-                    <input type="number" name="system.legRight" value="{{system.legRight}}" min="0" data-dtype="Number"/>
-                </div>
+                        <div class="form-field-line">
+                            <label>Right Leg</label>
+                            <input type="number" name="system.legRight" value="{{system.legRight}}" min="0" data-dtype="Number"/>
+                        </div>
+                    </div>
             </div>
         </div>
 

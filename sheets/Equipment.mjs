@@ -6,7 +6,7 @@ export class WHEquipmentSheet extends ItemSheet {
             classes: ["wfrp2e", "sheet", "item", "equipment"],
             width: 500,
             height: 600,
-            tabs: []
+            tabs: [{navSelector: ".tabs", contentSelector: ".sheet-body", initial: "details"}]
         });
     }
 
@@ -17,10 +17,13 @@ export class WHEquipmentSheet extends ItemSheet {
 
     /** @override */
     async getData(options) {
-        const context = await super.getData(options);
-        context.system = this.item.system;
-        return context;
-    }
+    const context = await super.getData(options);
+    context.system = this.item.system;
+    context.enrichedDescription = await TextEditor.enrichHTML(this.item.system.description, {
+        async: true,
+        secrets: this.item.isOwner
+    });
+    return context;    }
 
     /** @override */
     activateListeners(html) {

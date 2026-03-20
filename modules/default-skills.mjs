@@ -38,7 +38,10 @@ export const DEFAULT_SKILLS = {
         { name: "Read and Write", characteristic: "int" },
         { name: "Sail", characteristic: "ag" },
         { name: "Set Trap", characteristic: "ag" },
-        { name: "Shadowing", characteristic: "ag" }
+        { name: "Shadowing", characteristic: "ag" },
+        { name: "Sleight of Hand", characteristic: "ag" },
+        { name: "Torture", characteristic: "fel" },
+        { name: "Ventriloquism", characteristic: "fel" }
     ],
     knowledge: [],
     other: []

@@ -48,6 +48,10 @@ Hooks.once("init", function () {
         return a === b;
     });
 
+    Handlebars.registerHelper('gt', function(a, b) {
+        return a > b;
+    });
+
     // Set initiative formula
     CONFIG.Combat.initiative = {
         formula: "1d10 + @characteristics.ag.current",
@@ -101,6 +105,214 @@ Hooks.once("init", function () {
     console.log("wfrp2e | Actor class:", CONFIG.Actor.documentClass.name);
     console.log("wfrp2e | Data Models:", CONFIG.Actor.dataModels, CONFIG.Item.dataModels);
 });
+
+// Hotbar macro creation
+Hooks.on("hotbarDrop", async (bar, data, slot) => {
+    // Only handle our custom macro types
+    if (!data.macroType) return true;
+    
+    if (data.macroType === "skill") {
+        await createSkillMacro(data, slot);
+        return false;
+    } else if (data.macroType === "spell") {
+        await createSpellMacro(data, slot);
+        return false;
+    } else if (data.macroType === "weapon") {
+        await createWeaponMacro(data, slot);
+        return false;
+    } else if (data.macroType === "parry") {
+        await createParryMacro(data, slot);
+        return false;
+    }
+
+    return true;
+});
+
+/**
+ * Create a macro for rolling a skill
+ */
+async function createSkillMacro(data, slot) {
+    const actor = game.actors.get(data.actorId);
+    if (!actor) {
+        ui.notifications.warn("Actor not found!");
+        return;
+    }
+    
+    const command = `// Roll ${data.skillName}
+    const actor = game.actors.get("${data.actorId}");
+    if (!actor) {
+        ui.notifications.warn("Actor not found!");
+    } else {
+        actor.rollSkill(${data.skillIndex});
+    }`;
+
+    // Check if macro already exists
+    let macro = game.macros.find(m => 
+        (m.name === `${actor.name}: ${data.skillName}`) && 
+        (m.command === command)
+    );
+    
+    if (!macro) {
+        macro = await Macro.create({
+            name: `${actor.name}: ${data.skillName}`,
+            type: "script",
+            img: "icons/svg/d20-grey.svg",
+            command: command,
+            flags: { "fvtt-wfrp2e.skillMacro": true }
+        });
+    }
+    
+    if (macro) {
+        game.user.assignHotbarMacro(macro, slot);
+    }
+}
+
+/**
+ * Create a macro for casting a spell
+ */
+async function createSpellMacro(data, slot) {
+    const actor = game.actors.get(data.actorId);
+    if (!actor) {
+        ui.notifications.warn("Actor not found!");
+        return;
+    }
+    
+    const command = `// Cast ${data.itemName}
+    const actor = game.actors.get("${data.actorId}");
+    if (!actor) {
+        ui.notifications.warn("Actor not found!");
+        return;
+    }
+
+    const spell = actor.items.get("${data.itemId}");
+    if (!spell) {
+        ui.notifications.warn("Spell not found!");
+        return;
+    }
+
+    // Dynamic import to load the spell casting dialog
+    import("/systems/fvtt-wfrp2e/modules/spell-casting-dialog.mjs").then(async (module) => {
+        const dialog = await module.SpellCastingDialog.create(actor, spell);
+        if (dialog) await dialog.executeCast();
+    });`;
+
+    // Check if macro already exists
+    let macro = game.macros.find(m => 
+        (m.name === `${actor.name}: ${data.itemName}`) && 
+        (m.command === command)
+    );
+    
+    if (!macro) {
+        macro = await Macro.create({
+            name: `${actor.name}: ${data.itemName}`,
+            type: "script",
+            img: data.itemImg || "icons/magic/symbols/runes-star-magenta.webp",
+            command: command,
+            flags: { "fvtt-wfrp2e.spellMacro": true }
+        });
+    }
+    
+    if (macro) {
+        game.user.assignHotbarMacro(macro, slot);
+    }
+}
+
+/**
+ * Create a macro for attacking with a weapon
+ */
+async function createWeaponMacro(data, slot) {
+    const actor = game.actors.get(data.actorId);
+    if (!actor) {
+        ui.notifications.warn("Actor not found!");
+        return;
+    }
+    
+    const command = `// Attack with ${data.itemName}
+    const actor = game.actors.get("${data.actorId}");
+    if (!actor) {
+        ui.notifications.warn("Actor not found!");
+        return;
+    }
+
+    const weapon = actor.items.get("${data.itemId}");
+    if (!weapon) {
+        ui.notifications.warn("Weapon not found!");
+        return;
+    }
+
+    // Use the weapon attack dialog
+    import("/systems/fvtt-wfrp2e/modules/weapon-attack-dialog.mjs").then(async (module) => {
+        const dialog = await module.WeaponAttackDialog.create(actor, weapon);
+        if (dialog) await dialog.executeAttack();
+    });`;
+
+    // Check if macro already exists
+    let macro = game.macros.find(m => 
+        (m.name === `${actor.name}: ${data.itemName}`) && 
+        (m.command === command)
+    );
+    
+    if (!macro) {
+        macro = await Macro.create({
+            name: `${actor.name}: ${data.itemName}`,
+            type: "script",
+            img: data.itemImg || "icons/weapons/swords/sword-broad-iron.webp",
+            command: command,
+            flags: { "fvtt-wfrp2e.weaponMacro": true }
+        });
+    }
+    
+    if (macro) {
+        game.user.assignHotbarMacro(macro, slot);
+    }
+}
+
+/**
+ * Create a macro for parrying with a weapon
+ */
+async function createParryMacro(data, slot) {
+    const actor = game.actors.get(data.actorId);
+    if (!actor) {
+        ui.notifications.warn("Actor not found!");
+        return;
+    }
+    
+    const command = `// Parry with ${data.itemName}
+    const actor = game.actors.get("${data.actorId}");
+    if (!actor) {
+        ui.notifications.warn("Actor not found!");
+        return;
+    }
+
+    const weapon = actor.items.get("${data.itemId}");
+    if (!weapon) {
+        ui.notifications.warn("Weapon not found!");
+        return;
+    }
+
+    // Call the existing rollParry method
+    actor.rollParry(weapon);`;
+
+    // Check if macro already exists
+    let macro = game.macros.find(m => 
+        (m.name === `${actor.name}: Parry (${data.itemName})`) && 
+        (m.command === command)
+    );
+    
+    if (!macro) {
+        macro = await Macro.create({
+            name: `${actor.name}: Parry (${data.itemName})`,
+            type: "script",
+            img: data.itemImg || "icons/equipment/shield/heater-steel-worn.webp",
+            command: command,
+            flags: { "fvtt-wfrp2e.parryMacro": true }
+        });
+    }
+    
+    if (macro) {
+        game.user.assignHotbarMacro(macro, slot);
+    }
+}
 
 // Hook that runs when a new actor is created
 Hooks.on("preCreateActor", (actor, data, options, userId) => {    

@@ -11,8 +11,9 @@ export class ArmourDataModel extends foundry.abstract.TypeDataModel {
             armLeft: new fields.NumberField({initial: 0, min:0}),
             armRight: new fields.NumberField({initial: 0, min:0}),
             body: new fields.NumberField({initial: 0, min:0}),
-            armourType: new fields.NumberField({initial: 0, min:0}),
-            availability: new fields.StringField({initial: ""}),
+            armourType: new fields.StringField({initial: "Light"}),
+            availability: new fields.StringField({initial: "Average"}),
+            craftsmanship: new fields.StringField({initial: "Common"}),
         };
     }
 }

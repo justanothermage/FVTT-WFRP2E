@@ -97,6 +97,15 @@
                 "PLAYER": "OBSERVER"
             }
         },
+                {
+            "name": "spells",
+            "label": "WFRP2E Spells",
+            "path": "packs/spells.db",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER"
+            }
+        },
         {
             "name": "Rollable Tables",
             "label": "WFRP2E Rollable Tables",
@@ -111,7 +120,7 @@
         {
             "name": "WFRP2E Content",
             "sorting": "a",
-            "packs": ["beastiary", "careers", "equipment", "talents", "Rollable Tables"]
+            "packs": ["beastiary", "careers", "equipment", "talents", "spells", "Rollable Tables"]
         }
     ],
     "socket": false,

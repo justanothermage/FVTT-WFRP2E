@@ -48,6 +48,7 @@ export class WHCharacterSheet extends ActorSheet {
         context.talents = this.actor.items.filter(i => i.type === "talent");
         context.mutations = this.actor.items.filter(i => i.type === "mutation");
         context.insanities = this.actor.items.filter(i => i.type === "insanity");
+        context.equipment = this.actor.items.filter(i => i.type === "equipment");
         context.weapons = this._sortItems(
             this.actor.items.filter(i => i.type === "weapon"),
             "weapons"
@@ -189,6 +190,33 @@ export class WHCharacterSheet extends ActorSheet {
             run: mov * 2,
             charge: mov * 3,
             flee: mov * 6
+        };
+
+        // Calculate encumbrance
+        const strength = this.actor.system.characteristics.s.current || 0;
+        const maxEncumbrance = strength * 10;
+
+        // Sum encumbrance from all inventory items (weapons, armour, equipment)
+        let currentEncumbrance = 0;
+
+        // Add weapon encumbrance
+        for (let weapon of context.weapons) {
+            currentEncumbrance += weapon.system.encumbrance || 0;
+        }
+
+        // Add armour encumbrance
+        for (let armour of context.armour) {
+            currentEncumbrance += armour.system.encumbrance || 0;
+        }
+
+        // Add equipment encumbrance
+        for (let equipment of context.equipment) {
+            currentEncumbrance += equipment.system.encumbrance || 0;
+        }
+
+        context.encumbrance = {
+            current: currentEncumbrance,
+            max: maxEncumbrance
         };
 
         return context;
@@ -371,6 +399,9 @@ export class WHCharacterSheet extends ActorSheet {
         // Delete Special Rule
         html.find('.special-rule-delete').click(this._onDeleteSpecialRule.bind(this));
 
+        // Item creation
+        html.find('.item-create').click(this._onItemCreate.bind(this));
+
         // Career item updates to main tab
         this.actor.items.forEach(item => {
             if (item.type === "career") {
@@ -381,6 +412,9 @@ export class WHCharacterSheet extends ActorSheet {
                 });
             };
         });
+
+        // Roll Parry 
+        html.find('.weapon-parry').click(this._onWeaponParry.bind(this));
 
         // Roll Criticals
         html.find(".roll-critical-hit").click(this._onRollCriticalHit.bind(this));
@@ -419,6 +453,23 @@ export class WHCharacterSheet extends ActorSheet {
                 icon.classList.add('fa-chevron-down');
             }
         });
+
+        // Make skills, spells, and weapons draggable to hotbar
+        html.find('.skill-roll').each((i, element) => {
+            element.addEventListener('dragstart', this._onDragSkill.bind(this), false);
+        });
+        
+        html.find('.spell-cast').each((i, element) => {
+            element.addEventListener('dragstart', this._onDragSpell.bind(this), false);
+        });
+        
+        html.find('.weapon-attack').each((i, element) => {
+            element.addEventListener('dragstart', this._onDragWeapon.bind(this), false);
+        });
+        html.find('.weapon-parry').each((i, element) => {
+            element.addEventListener('dragstart', this._onDragParry.bind(this), false);
+        });
+
     }
 
     /**
@@ -726,6 +777,20 @@ export class WHCharacterSheet extends ActorSheet {
         if (dialog) {
             await dialog.executeAttack();
         }
+    }
+
+
+    async _onWeaponParry(event) {
+        event.preventDefault();
+        const itemId = event.currentTarget.dataset.itemId;
+        const weapon = this.actor.items.get(itemId);
+
+        if (!weapon) {
+            console.error("Weapon not found!");
+            return;
+        }
+
+        await this.actor.rollParry(weapon);
     }
 
     /**
@@ -1140,5 +1205,151 @@ export class WHCharacterSheet extends ActorSheet {
                 <p>${resultText}</p>
             </div>`
         });
+    }
+
+    /**
+     * Handle drag start events for weapon attack and parry buttons to create hotbar macros
+     * @param {*} event 
+     * @returns 
+     */
+    _onDragStart(event) {
+        const target = event.currentTarget;
+
+        // Only handle our weapon action buttons
+        if (target.classList.contains("weapon-attack") || target.classList.contains("weapon-parry")) {
+            const itemId = target.dataset.itemId;
+            const weapon = this.actor.items.get(itemId);
+            if (!weapon) return;
+
+            const actionType = target.classList.contains("weapon-attack") ? "attack" : "parry";
+
+            event.dataTransfer.setData("text/plain", JSON.stringify({
+                type: "wfrp2e.weaponAction",
+                actorId: this.actor.id,
+                weaponId: itemId,
+                actionType: actionType,
+                weaponName: weapon.name,
+                weaponImg: weapon.img
+            }));
+            return;
+        }
+
+        // Fall back to default behaviour for anything else (e.g. item rows)
+        super._onDragStart(event);
+    }
+
+    /**
+     * Handle creating a new item
+     * @param {Event} event   The originating click event
+     * @private
+     */
+    async _onItemCreate(event) {
+        event.preventDefault();
+        const element = event.currentTarget;
+        const itemType = element.dataset.type;
+        
+        // Create the item data
+        const itemData = {
+            name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
+            type: itemType,
+            system: {}
+        };
+        
+        // Create the item
+        const item = await Item.create(itemData, {parent: this.actor});
+        
+        // Open the item sheet for editing
+        item.sheet.render(true);
+    }
+
+    /**
+     * Handle dragging a skill to create a macro
+     * @param {DragEvent} event
+     * @private
+     */
+    _onDragSkill(event) {
+        const skillIndex = parseInt(event.currentTarget.dataset.skillIndex);
+        const skill = this.actor.system.skills[skillIndex];
+        
+        if (!skill) return;
+        
+        const dragData = {
+            type: "Macro",
+            actorId: this.actor.id,
+            skillIndex: skillIndex,
+            skillName: skill.name,
+            macroType: "skill"
+        };
+        
+        event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+    }
+
+    /**
+     * Handle dragging a spell to create a macro
+     * @param {DragEvent} event
+     * @private
+     */
+    _onDragSpell(event) {
+        const itemId = event.currentTarget.dataset.itemId;
+        const spell = this.actor.items.get(itemId);
+        
+        if (!spell) return;
+        
+        const dragData = {
+            type: "Macro",
+            actorId: this.actor.id,
+            itemId: itemId,
+            itemName: spell.name,
+            itemImg: spell.img,
+            macroType: "spell"
+        };
+        
+        event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+    }
+
+    /**
+     * Handle dragging a weapon to create a macro
+     * @param {DragEvent} event
+     * @private
+     */
+    _onDragWeapon(event) {
+        const itemId = event.currentTarget.dataset.itemId;
+        const weapon = this.actor.items.get(itemId);
+        
+        if (!weapon) return;
+        
+        const dragData = {
+            type: "Macro",
+            actorId: this.actor.id,
+            itemId: itemId,
+            itemName: weapon.name,
+            itemImg: weapon.img,
+            macroType: "weapon"
+        };
+        
+        event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+    }
+
+    /**
+     * Handle dragging a parry action to create a macro
+     * @param {DragEvent} event
+     * @private
+     */
+    _onDragParry(event) {
+        const itemId = event.currentTarget.dataset.itemId;
+        const weapon = this.actor.items.get(itemId);
+        
+        if (!weapon) return;
+        
+        const dragData = {
+            type: "Macro",
+            actorId: this.actor.id,
+            itemId: itemId,
+            itemName: weapon.name,
+            itemImg: weapon.img,
+            macroType: "parry"
+        };
+        
+        event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
     }
 }

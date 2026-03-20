@@ -128,6 +128,51 @@ export class WHCharacter extends Actor {
             return roll;
         });
     }
+
+    /**
+     * Handle rolling a parry with a melee weapon
+     * @param {*} weapon 
+     */
+    async rollParry(weapon) {
+        const wsValue = this.system.characteristics.ws.current;
+        const hasDefensive = weapon.system.hasDefensive;
+        const defensiveBonus = hasDefensive ? 10 : 0;
+        const baseTarget = wsValue + defensiveBonus;
+        const title = `Parry with ${weapon.name}`;
+
+        await showRollDialog(title, baseTarget, async (finalTarget, modifier, rollMode) => {
+            const roll = await new Roll("1d100").evaluate();
+
+            const isSuccess = roll.total <= finalTarget;
+            const margin = Math.abs(finalTarget - roll.total);
+            const degrees = Math.floor(margin / 10);
+
+            let flavor = `<h3>${title}</h3>`;
+            flavor += `<p><strong>WS:</strong> ${wsValue}`;
+            if (hasDefensive) flavor += ` + 10 (Defensive)`;
+            if (modifier !== 0) flavor += ` ${modifier >= 0 ? '+' : ''}${modifier}`;
+            flavor += ` = ${finalTarget}</p>`;
+
+            if (isSuccess) {
+                flavor += `<p class="success"><strong>Parry Succeeds!</strong>`;
+                if (degrees > 0) flavor += ` (${degrees} Degree${degrees > 1 ? 's' : ''})`;
+                flavor += `</p>`;
+            } else {
+                flavor += `<p class="failure"><strong>Parry Fails!</strong>`;
+                if (degrees > 0) flavor += ` (${degrees} Degree${degrees > 1 ? 's' : ''})`;
+                flavor += `</p>`;
+            }
+
+            await roll.toMessage({
+                speaker: ChatMessage.getSpeaker({actor: this}),
+                flavor: flavor,
+                rollMode: rollMode
+            });
+
+            return roll;
+        });
+    }
+
     // Prepare derived data
     prepareDerivedData() {
         super.prepareDerivedData();
@@ -253,4 +298,144 @@ export class WHCharacter extends Actor {
 
         return total;
     }
+
+    /*
+    
+     * Roll a weapon attack
+     * @param {string} weaponId - The weapon item ID
+     * @returns {Promise<Roll>}
+     
+    async rollWeaponAttack(weaponId) {
+        const weapon = this.items.get(weaponId);
+        if (!weapon) {
+            ui.notifications.warn("Weapon not found!");
+            return null;
+        }
+        
+        // Get the weapon skill group and find matching skill
+        const weaponGroup = weapon.system.group;
+        const skill = this.system.skills.find(s => s.name === weaponGroup);
+        
+        if (!skill) {
+            ui.notifications.warn(`Skill ${weaponGroup} not found!`);
+            return null;
+        }
+        
+        // Calculate skill total
+        const charKey = skill.characteristic.toLowerCase();
+        const charValue = this.system.characteristics[charKey]?.current || 0;
+        const baseSkillTotal = skill.trained 
+            ? charValue + skill.advances + skill.modifier
+            : Math.floor((charValue + skill.advances) / 2) + skill.modifier;
+        
+        const title = `${weapon.name} Attack`;
+        
+        // Use the existing roll dialog
+        const {showRollDialog} = await import("../modules/roll-dialog.mjs");
+        await showRollDialog(title, baseSkillTotal, async (finalTarget, modifier, rollMode) => {
+            const roll = await new Roll("1d100").evaluate();
+            
+            const isSuccess = roll.total <= finalTarget;
+            const margin = Math.abs(finalTarget - roll.total);
+            const degrees = Math.floor(margin / 10);
+            
+            let flavor = `<h3>${title}</h3>`;
+            flavor += `<p><strong>Skill:</strong> ${weaponGroup} (${baseSkillTotal})`;
+            if (modifier !== 0) {
+                flavor += ` ${modifier >= 0 ? '+' : ''}${modifier} = ${finalTarget}`;
+            }
+            flavor += `</p>`;
+            
+            if (isSuccess) {
+                flavor += `<p class="success"><strong>Hit!</strong>`;
+                if (degrees > 0) flavor += ` (${degrees} Degree${degrees > 1 ? 's' : ''})`;
+                flavor += `</p>`;
+            } else {
+                flavor += `<p class="failure"><strong>Miss!</strong>`;
+                if (degrees > 0) flavor += ` (${degrees} Degree${degrees > 1 ? 's' : ''})`;
+                flavor += `</p>`;
+            }
+            
+            await roll.toMessage({
+                speaker: ChatMessage.getSpeaker({actor: this}),
+                flavor: flavor,
+                rollMode: rollMode
+            });
+            
+            return roll;
+        });
+    }
+
+    
+     * Roll a weapon parry
+     * @param {string} weaponId - The weapon item ID
+     * @returns {Promise<Roll>}
+     
+    async rollWeaponParry(weaponId) {
+        const weapon = this.items.get(weaponId);
+        if (!weapon) {
+            ui.notifications.warn("Weapon not found!");
+            return null;
+        }
+        
+        // Check if weapon has Defensive quality
+        if (!weapon.system.hasDefensive) {
+            ui.notifications.warn(`${weapon.name} does not have the Defensive quality!`);
+            return null;
+        }
+        
+        // Get the weapon skill group and find matching skill
+        const weaponGroup = weapon.system.group;
+        const skill = this.system.skills.find(s => s.name === weaponGroup);
+        
+        if (!skill) {
+            ui.notifications.warn(`Skill ${weaponGroup} not found!`);
+            return null;
+        }
+        
+        // Calculate skill total
+        const charKey = skill.characteristic.toLowerCase();
+        const charValue = this.system.characteristics[charKey]?.current || 0;
+        const baseSkillTotal = skill.trained 
+            ? charValue + skill.advances + skill.modifier
+            : Math.floor((charValue + skill.advances) / 2) + skill.modifier;
+        
+        const title = `Parry with ${weapon.name}`;
+        
+        // Use the existing roll dialog
+        const {showRollDialog} = await import("../modules/roll-dialog.mjs");
+        await showRollDialog(title, baseSkillTotal, async (finalTarget, modifier, rollMode) => {
+            const roll = await new Roll("1d100").evaluate();
+            
+            const isSuccess = roll.total <= finalTarget;
+            const margin = Math.abs(finalTarget - roll.total);
+            const degrees = Math.floor(margin / 10);
+            
+            let flavor = `<h3>${title}</h3>`;
+            flavor += `<p><strong>Skill:</strong> ${weaponGroup} (${baseSkillTotal})`;
+            if (modifier !== 0) {
+                flavor += ` ${modifier >= 0 ? '+' : ''}${modifier} = ${finalTarget}`;
+            }
+            flavor += `</p>`;
+            
+            if (isSuccess) {
+                flavor += `<p class="success"><strong>Parry Success!</strong>`;
+                if (degrees > 0) flavor += ` (${degrees} Degree${degrees > 1 ? 's' : ''})`;
+                flavor += `</p>`;
+            } else {
+                flavor += `<p class="failure"><strong>Parry Failed!</strong>`;
+                if (degrees > 0) flavor += ` (${degrees} Degree${degrees > 1 ? 's' : ''})`;
+                flavor += `</p>`;
+            }
+            
+            await roll.toMessage({
+                speaker: ChatMessage.getSpeaker({actor: this}),
+                flavor: flavor,
+                rollMode: rollMode
+            });
+            
+            return roll;
+        });
+    }
+    */
 }

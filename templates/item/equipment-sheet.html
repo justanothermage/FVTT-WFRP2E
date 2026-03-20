@@ -1,22 +1,54 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
-    
     <header class="sheet-header">
-        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
-        
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
         <div class="header-fields">
-            <h1 class="item-title">
-                <input name="name" type="text" value="{{item.name}}" placeholder="Item Name"/>
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Equipment Name"/>
             </h1>
-            <p class="item-type">{{item.type}}</p>
         </div>
     </header>
 
-    <div class="sheet-body">
-        <h3>Notes</h3>
-        <textarea name="system.description" rows="15" placeholder="Add notes about this item...">{{system.description}}</textarea>
-        
-        <p class="placeholder-message">
-            <strong>Detailed item properties will be added in future updates.</strong>
-        </p>
-    </div>
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="details">Details</a>
+        <a class="item" data-tab="description">Description</a>
+    </nav>
+
+    <section class="sheet-body">
+        <!-- Details Tab -->
+        <div class="tab" data-group="primary" data-tab="details">
+            <div class="form-group-vertical">
+                <div class="form-field-line">
+                    <div class="form-field-line">
+                        <label>Availability</label>
+                        <select name="system.availability">
+                            <option value="Abundant"  {{#if (eq system.availability "Abundant")}}selected{{/if}}>Abundant</option>
+                            <option value="Plentiful" {{#if (eq system.availability "Plentiful")}}selected{{/if}}>Plentiful</option>
+                            <option value="Common"    {{#if (eq system.availability "Common")}}selected{{/if}}>Common</option>
+                            <option value="Average"   {{#if (eq system.availability "Average")}}selected{{/if}}>Average</option>
+                            <option value="Scarce"    {{#if (eq system.availability "Scarce")}}selected{{/if}}>Scarce</option>
+                            <option value="Rare"      {{#if (eq system.availability "Rare")}}selected{{/if}}>Rare</option>
+                            <option value="Very Rare" {{#if (eq system.availability "Very Rare")}}selected{{/if}}>Very Rare</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-field-line-double">
+                    <div class="form-field-line">
+                        <label>Cost (gc)</label>
+                        <input type="number" name="system.cost" value="{{system.cost}}" min="0" data-dtype="Number"/>
+                    </div>
+                    <div class="form-field-line">
+                        <label>Encumbrance</label>
+                        <input type="number" name="system.encumbrance" value="{{system.encumbrance}}" min="0" data-dtype="Number"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description Tab -->
+        <div class="tab" data-group="primary" data-tab="description">
+            <div class="editor-container">
+                {{editor enrichedDescription target="system.description" button=true owner=owner editable=editable}}
+            </div>
+        </div>
+    </section>
 </form>

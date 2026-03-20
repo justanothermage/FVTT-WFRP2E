@@ -145,7 +145,8 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel
                 fatePoints: new fields.SchemaField({
                     initial: new fields.NumberField({required: true, integer: true, initial: 0}),
                     misc: new fields.NumberField({required: true, integer: true, initial: 0}),
-                    //current: new fields.NumberField({required: true, integer: true, initial: 0})
+                    current: new fields.NumberField({required: true, integer: true, initial: 0}),
+                    value: new fields.NumberField({required: true, integer: true, initial: 0})
                 })
             }),
 
@@ -175,6 +176,12 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel
                 }),
                 {initial: []}
             ),
+
+            // Encumbrance
+            encumbrance: new fields.SchemaField({
+                current: new fields.NumberField({required: true, integer: true, initial: 0}),
+                max: new fields.NumberField({required: true, integer: true, initial: 0}),
+            }),
 
             // Special Rules - stored as array
             specialRules: new fields.ArrayField(

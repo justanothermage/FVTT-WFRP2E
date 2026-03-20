@@ -4,7 +4,7 @@ export class WHArmourSheet extends ItemSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["wfrp2e", "sheet", "item", "armour"],
-            width: 520,
+            width: 600,
             height: 600,
             tabs: [{navSelector: ".tabs", contentSelector: ".sheet-body", initial: "details"}]
         });
