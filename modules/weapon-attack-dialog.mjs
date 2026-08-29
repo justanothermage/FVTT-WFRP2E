@@ -6,6 +6,7 @@ export class WeaponAttackDialog extends Dialog {
         this.modifier = 0;
         this.damageModifier = 0;
         this.attackType = "normal";
+        this.shieldPenalty = 0;
     }
 
     static async create(actor, weapon) {
@@ -35,6 +36,13 @@ export class WeaponAttackDialog extends Dialog {
                     <label>Target Number (${charLabel}):</label>
                     <input type="number" name="target" value="${targetNumber}" readonly/>
                 </div>
+                ${isRanged ? `
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" name="targetHasShield"/>
+                        Target has Shield (-10 BS)
+                    </label>
+                </div>` : ""}
                 <div class="form-group">
                     <label>Modifier:</label>
                     <input type="number" name="modifier" value="0" autofocus/>
@@ -63,6 +71,7 @@ export class WeaponAttackDialog extends Dialog {
                             dialog.modifier = modifier;
                             dialog.damageModifier = parseInt(html.find('[name="damageModifier"]').val()) || 0;
                             dialog.attackType = html.find('[name="attackType"]').val();
+                            dialog.shieldPenalty = html.find('[name="targetHasShield"]').is(':checked') ? -10 : 0;
                             resolve(dialog);
                         }
                     },
@@ -169,6 +178,13 @@ export class WeaponAttackDialog extends Dialog {
             }
         }
 
+    _getCraftsmanshipBonus() {
+            const craftsmanship = this.weapon.system.craftsmanship;
+            if (craftsmanship === "Best") return 5;
+            if (craftsmanship === "Poor") return -5;
+            return 0;
+        }
+
     async executeAttack() {
         if (this.attackType === "swift") {
             await this._executeSwiftAttack();
@@ -182,7 +198,7 @@ async _executeSingleAttack() {
         const characteristic = isRanged ? "bs" : "ws";
         const charLabel = isRanged ? "BS" : "WS";
         const attackTypeBonus = this._getAttackTypeBonus();
-        const targetNumber = this.actor.system.characteristics[characteristic].current + this.modifier + attackTypeBonus;
+        const targetNumber = this.actor.system.characteristics[characteristic].current + this.modifier + attackTypeBonus + this._getCraftsmanshipBonus() + this.shieldPenalty;
         const qualities = this._getWeaponQualities();
 
         // Roll attack
@@ -272,7 +288,7 @@ async _executeSwiftAttack() {
         const characteristic = isRanged ? "bs" : "ws";
         const charLabel = isRanged ? "BS" : "WS";
         const numAttacks = this.actor.system.secondary?.attacks?.current ?? 1;
-        const targetNumber = this.actor.system.characteristics[characteristic].current + this.modifier;
+        const targetNumber = this.actor.system.characteristics[characteristic].current + this.modifier + this._getCraftsmanshipBonus() + this.shieldPenalty;
         const qualities = this._getWeaponQualities();
         const qualityNotices = this._buildQualityNotices(qualities);
 

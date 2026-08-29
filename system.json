@@ -123,7 +123,7 @@
             "packs": ["beastiary", "careers", "equipment", "talents", "spells", "Rollable Tables"]
         }
     ],
-    "socket": false,
+    "socket": true,
     "manifest": "Replace this with a link to the /latest release system.json",
     "download": "link to a .zip file of the current version",
     "background": "systems/fvtt-wfrp2e/assets/Warhammer_fantasy_roleplay_cover.jpg",
