@@ -1,4 +1,14 @@
 {
+  "WFRP2E.HeaderName": "Name",
+  "WFRP2E.HeaderCurrentCareer": "Current Career",
+  "WFRP2E.HeaderPreviousCareers": "Previous Careers",
+  "WFRP2E.HeaderRace": "Race",
+  "WFRP2E.HeaderReligion": "Religion",
+  "WFRP2E.HeaderConcept": "Concept",
+  "WFRP2E.HeaderFortune": "Fortune",
+  "WFRP2E.HeaderXP": "XP",
+
+
   "WFRP2E.CharacteristicWS": "Weapon Skill",
   "WFRP2E.CharacteristicBS": "Ballistic Skill",
   "WFRP2E.CharacteristicS": "Strength",

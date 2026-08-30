@@ -1,15 +1,21 @@
-2026/02/25-18:13:47.940 9674 Recovering log #15
-2026/02/25-18:13:47.941 9674 Recovering log #17
-2026/02/25-18:13:47.941 9674 Recovering log #18
-2026/02/25-18:13:47.941 9674 Level-0 table #18: started
-2026/02/25-18:13:47.944 9674 Level-0 table #18: 125221 bytes OK
-2026/02/25-18:13:47.949 9674 Delete type=0 #15
-2026/02/25-18:13:47.949 9674 Delete type=0 #17
-2026/02/25-18:13:47.949 9674 Delete type=0 #18
-2026/02/25-18:13:47.950 9674 Delete type=3 #14
-2026/02/25-18:47:58.313 9c58 Compacting 1@0 + 1@1 files
-2026/02/25-18:47:58.322 9c58 Generated table #20@0: 149 keys, 282823 bytes
-2026/02/25-18:47:58.322 9c58 Compacted 1@0 + 1@1 files => 282823 bytes
-2026/02/25-18:47:58.326 9c58 compacted to: files[ 0 1 0 0 0 0 0 ]
-2026/02/25-18:47:58.327 9c58 Delete type=2 #13
-2026/02/25-18:47:58.327 9c58 Delete type=2 #18
+2026/08/30-12:34:12.427 3208 Recovering log #19
+2026/08/30-12:34:12.431 3208 Level-0 table #22: started
+2026/08/30-12:34:12.436 3208 Level-0 table #22: 311117 bytes OK
+2026/08/30-12:34:12.440 3208 Delete type=2 #13
+2026/08/30-12:34:12.440 3208 Delete type=0 #15
+2026/08/30-12:34:12.440 3208 Delete type=0 #17
+2026/08/30-12:34:12.440 3208 Delete type=0 #19
+2026/08/30-12:34:12.440 3208 Delete type=3 #14
+2026/08/30-12:34:12.440 3208 Delete type=3 #16
+2026/08/30-14:55:53.180 934c Level-0 table #25: started
+2026/08/30-14:55:53.187 934c Level-0 table #25: 288145 bytes OK
+2026/08/30-14:55:53.189 934c Delete type=0 #23
+2026/08/30-14:55:53.192 934c Manual compaction at level-0 from '!actors!1IgcbHBiPzsKS02o' @ 72057594037927935 : 1 .. '!folders!yWUZsQXtdop3TmLC' @ 0 : 0; will stop at '!actors.items!w7TrXx38DaXnoaya.zjA8sLxUsubDnekZ' @ 189 : 1
+2026/08/30-14:55:53.192 934c Compacting 2@0 + 1@1 files
+2026/08/30-14:55:53.201 934c Generated table #26@0: 177 keys, 289469 bytes
+2026/08/30-14:55:53.201 934c Compacted 2@0 + 1@1 files => 289469 bytes
+2026/08/30-14:55:53.202 934c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/08/30-14:55:53.202 934c Delete type=2 #20
+2026/08/30-14:55:53.202 934c Delete type=2 #22
+2026/08/30-14:55:53.202 934c Delete type=2 #25
+2026/08/30-14:55:53.206 934c Manual compaction at level-0 from '!actors.items!w7TrXx38DaXnoaya.zjA8sLxUsubDnekZ' @ 189 : 1 .. '!folders!yWUZsQXtdop3TmLC' @ 0 : 0; will stop at (end)

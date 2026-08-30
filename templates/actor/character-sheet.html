@@ -6,33 +6,33 @@
         <div class="header-content">
             <div class="header-row-1">
                 <div class="header-field name-field">
-                    <label>Name</label>
+                    <label>{{localize "WFRP2E.HeaderName"}}</label>
                     <input type="text" name="name" value="{{actor.name}}" placeholder="Character Name"/>
                 </div>
                 <div class="header-field">
-                    <label>Current Career</label>
+                    <label>{{localize "WFRP2E.HeaderCurrentCareer"}}</label>
                     <span class="current-career-display">{{currentCareer}}</span>
                 </div>
                 <div class="header-field previous-careers-field">
-                    <label>Previous Careers</label>
+                    <label>{{localize "WFRP2E.HeaderPreviousCareers"}}</label>
                     <input type="text" name="system.previousCareersText" value="{{system.previousCareersText}}" placeholder="List previous careers"/>
                 </div>
             </div>
             <div class="header-row-2">
                 <div class="header-field">
-                    <label>Race</label>
+                    <label>{{localize "WFRP2E.HeaderRace"}}</label>
                     <input type="text" name="system.personalDetails.race" value="{{system.personalDetails.race}}" placeholder=""/>
                 </div>
                 <div class="header-field">
-                    <label>Religion</label>
+                    <label>{{localize "WFRP2E.HeaderReligion"}}</label>
                     <input type="text" name="system.personalDetails.religion" value="{{system.personalDetails.religion}}" placeholder=""/>
                 </div>
                 <div class="header-field concept-field">
-                    <label>Concept</label>
+                    <label>{{localize "WFRP2E.HeaderConcept"}}</label>
                     <input type="text" name="system.personalDetails.concept" value="{{system.personalDetails.concept}}" placeholder=""/>
                 </div>
                 <div class="header-field fortune-field">
-                    <label>Fortune</label>
+                    <label>{{localize "WFRP2E.HeaderFortune"}}</label>
                     <div class="fortune-inputs">
                         <input type="number" name="system.secondary.fatePoints.value" value="{{system.secondary.fatePoints.value}}" data-dtype="Number" placeholder="0"/>
                         <span>/</span>
@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="header-field xp-field">
-                    <label>XP</label>
+                    <label>{{localize "WFRP2E.HeaderXP"}}</label>
                     <div class="xp-inputs">
                         <input type="number" name="system.experience.total" value="{{system.experience.total}}" placeholder="0"/>
                         <span>/</span>
